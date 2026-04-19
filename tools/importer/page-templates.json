@@ -1,0 +1,87 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://www.cat.com/en_US.html"
+      ],
+      "description": "Cat.com US English homepage with hero content, product categories, and promotional sections",
+      "blocks": [
+        {
+          "name": "hero-banner",
+          "instances": ["[data-component='teaser--hero']"]
+        },
+        {
+          "name": "cards-category",
+          "instances": ["[data-component='list']"]
+        },
+        {
+          "name": "cards-article",
+          "instances": ["[data-component='editorial-card']"]
+        },
+        {
+          "name": "columns-feature",
+          "instances": [".offers-personalization [data-component='teaser']"]
+        },
+        {
+          "name": "columns-links",
+          "instances": [".hp-personalization-quick-links"]
+        },
+        {
+          "name": "cards-info",
+          "instances": [".hp-personalization-about"]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "Hero Banner",
+          "selector": ".hp-personlization-teaser-hero",
+          "style": null,
+          "blocks": ["hero-banner"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "Product Categories",
+          "selector": ".interactive-studio-content-spot",
+          "style": null,
+          "blocks": ["cards-category"],
+          "defaultContent": ["[data-component='title'] h2"]
+        },
+        {
+          "id": "section-3",
+          "name": "Featured Articles",
+          "selector": ".hp-personalization-articles",
+          "style": null,
+          "blocks": ["cards-article"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-4",
+          "name": "Feature Teaser",
+          "selector": ".offers-personalization",
+          "style": "cat-yellow",
+          "blocks": ["columns-feature"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-5",
+          "name": "Services & Support Grid",
+          "selector": ".hp-personalization-quick-links",
+          "style": "light-gray",
+          "blocks": ["columns-links"],
+          "defaultContent": []
+        },
+        {
+          "id": "section-6",
+          "name": "Info Cards",
+          "selector": ".hp-personalization-about",
+          "style": null,
+          "blocks": ["cards-info"],
+          "defaultContent": []
+        }
+      ]
+    }
+  ]
+}

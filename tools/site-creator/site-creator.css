@@ -1,0 +1,430 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.sc-body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Adobe Clean", "Source Sans 3", system-ui, sans-serif;
+  color: #f5f5f7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Atmospheric background (DA Start–style: dark + neon) --- */
+
+#app {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.sc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 120% 80% at 10% 20%, rgba(236, 72, 153, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 70% at 90% 10%, rgba(168, 85, 247, 0.28) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 45%),
+    linear-gradient(165deg, #05030a 0%, #0c0618 35%, #12081c 70%, #06040e 100%);
+}
+
+.sc-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.sc-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px 80px;
+}
+
+.sc-panel {
+  width: min(720px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.sc-dev-hint {
+  width: 100%;
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 10px;
+}
+
+/* --- Steps --- */
+
+.sc-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.sc-step {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(30, 20, 45, 0.65);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.sc-step-active {
+  background: linear-gradient(145deg, #ec4899 0%, #db2777 55%, #be185d 100%);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(236, 72, 153, 0.5),
+    0 8px 32px rgba(236, 72, 153, 0.35);
+}
+
+.sc-step-done {
+  background: rgba(45, 35, 65, 0.85);
+  border-color: rgba(236, 72, 153, 0.45);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sc-step-connector {
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.5), rgba(168, 85, 247, 0.35));
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* --- Step 1: codebase --- */
+
+.sc-block {
+  width: 100%;
+}
+
+.sc-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.sc-input-row {
+  display: flex;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 10, 22, 0.75);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+}
+
+.sc-input-row:focus-within {
+  border-color: rgba(236, 72, 153, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(236, 72, 153, 0.2),
+    0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sc-input-row input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  padding: 14px 16px;
+  outline: none;
+}
+
+.sc-input-row input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.sc-select {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  padding: 14px 16px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ffffff' fill-opacity='0.65' d='M1.41 0 6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.sc-select option {
+  color: #0c0618;
+  background: #f5f5f7;
+}
+
+.sc-custom-repo-wrap {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.sc-input-row-custom {
+  margin-top: 0;
+}
+
+.sc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sc-go {
+  flex-shrink: 0;
+  border: none;
+  padding: 14px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(180deg, #4b7bdc 0%, #2563eb 100%);
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.sc-go:hover {
+  filter: brightness(1.08);
+}
+
+.sc-go:active {
+  transform: scale(0.98);
+}
+
+.sc-hint {
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.sc-hint code {
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* --- Template cards --- */
+
+.sc-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .sc-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .sc-step-connector {
+    width: 24px;
+  }
+}
+
+.sc-card {
+  text-align: left;
+  padding: 18px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(18, 12, 32, 0.55);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+.sc-card:hover {
+  border-color: rgba(236, 72, 153, 0.45);
+  background: rgba(30, 18, 48, 0.65);
+  box-shadow: 0 8px 28px rgba(236, 72, 153, 0.12);
+  transform: translateY(-2px);
+}
+
+.sc-card:active {
+  transform: translateY(0);
+}
+
+.sc-card-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.sc-card-desc {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* --- Step 2 --- */
+
+.sc-step2 {
+  width: 100%;
+  padding: 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(12, 10, 22, 0.72);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+}
+
+.sc-step2 h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sc-step2 p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.sc-meta {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 16px;
+}
+
+.sc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sc-btn-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.sc-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Footer --- */
+
+.sc-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 16px 24px 22px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 3, 12, 0.85) 40%);
+}
+
+.sc-footer a {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.sc-footer a:hover {
+  text-decoration: underline;
+}
+
+/* --- Loading / errors --- */
+
+.sc-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 60vh;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.sc-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #ec4899;
+  border-radius: 50%;
+  animation: sc-spin 0.75s linear infinite;
+}
+
+@keyframes sc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sc-error {
+  max-width: 520px;
+  margin: 48px auto;
+  padding: 18px 22px;
+  border-radius: 12px;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(80, 20, 30, 0.45);
+  color: #fecaca;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sc-hidden {
+  display: none !important;
+}

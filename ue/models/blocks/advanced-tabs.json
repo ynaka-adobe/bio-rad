@@ -1,0 +1,36 @@
+{
+  "definitions": [
+    {
+      "title": "Advanced Tabs",
+      "id": "advanced-tabs",
+      "model": "advanced-tabs",
+      "plugins": {
+        "da": {
+          "name": "advanced-tabs",
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "content",
+              "selector": "div:nth-child(1)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "advanced-tabs",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "content",
+          "label": "Content",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

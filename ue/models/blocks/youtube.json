@@ -1,0 +1,36 @@
+{
+  "definitions": [
+    {
+      "title": "Youtube",
+      "id": "youtube",
+      "model": "youtube",
+      "plugins": {
+        "da": {
+          "name": "youtube",
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "content",
+              "selector": "div:nth-child(1)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "youtube",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "content",
+          "label": "Content",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

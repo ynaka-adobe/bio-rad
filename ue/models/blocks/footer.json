@@ -1,0 +1,36 @@
+{
+  "definitions": [
+    {
+      "title": "Footer",
+      "id": "footer",
+      "model": "footer",
+      "plugins": {
+        "da": {
+          "name": "footer",
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "content",
+              "selector": "div:nth-child(1)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "footer",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "content",
+          "label": "Content",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

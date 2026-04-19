@@ -1,0 +1,16 @@
+{
+  "content": {
+    "source": {
+      "type": "markup",
+      "url": "https://content.da.live/ynaka-adobe/dummy5"
+    }
+  },
+  "code": {
+    "owner": "ynaka-adobe",
+    "repo": "dummy",
+    "source": {
+      "type": "github",
+      "url": "https://github.com/ynaka-adobe/dummy"
+    }
+  }
+}
