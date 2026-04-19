@@ -55,9 +55,7 @@
   "filters": [
     {
       "id": "cards-promo",
-      "components": [
-        "card"
-      ]
+      "components": ["card"]
     }
   ]
 }

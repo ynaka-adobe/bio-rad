@@ -278,6 +278,83 @@
               ]
             }
           }
+        },
+        {
+          "title": "Hero Banner",
+          "id": "hero-banner",
+          "model": "hero-banner",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"hero-banner\"><div><div><picture><source type=\"image/webp\" srcset=\"\"><source type=\"image/jpeg\" srcset=\"\"><img loading=\"lazy\"></picture></div></div><div><div><h1></h1><p></p><p><a href=\"\">Learn More</a></p></div></div></div>",
+              "fields": [
+                { "name": "image", "selector": "div:first-child>div>picture>img[src]" },
+                { "name": "imageAlt", "selector": "div:first-child>div>picture>img[alt]" },
+                { "name": "text", "selector": "div:last-child>div" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Columns Feature",
+          "id": "columns-feature",
+          "model": "columns-feature",
+          "filter": "columns-feature",
+          "plugins": { "da": { "name": "columns-feature", "rows": 1, "columns": 2, "behaviour": "columns" } }
+        },
+        {
+          "title": "Columns Product",
+          "id": "columns-product",
+          "model": "columns-product",
+          "filter": "columns-product",
+          "plugins": { "da": { "name": "columns-product", "rows": 1, "columns": 2, "behaviour": "columns" } }
+        },
+        {
+          "title": "Cards Category",
+          "id": "cards-category",
+          "model": "cards-category",
+          "plugins": {
+            "da": {
+              "name": "cards-category",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Cards News",
+          "id": "cards-news",
+          "model": "cards-news",
+          "plugins": {
+            "da": {
+              "name": "cards-news",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Cards Promo",
+          "id": "cards-promo",
+          "model": "cards-promo",
+          "plugins": {
+            "da": {
+              "name": "cards-promo",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                { "name": "image", "selector": "div:nth-child(1)" },
+                { "name": "text", "selector": "div:nth-child(2)" }
+              ]
+            }
+          }
         }
       ]
     }

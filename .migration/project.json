@@ -1,5 +1,5 @@
 {
-  "type": "xwalk",
-  "libraryUrl": "https://main--sta-xwalk-boilerplate--aemysites.aem.page/tools/sidekick/library.json",
+  "type": "da",
+  "libraryUrl": "https://main--bio-rad--ynaka-adobe.aem.page/tools/sidekick/library.json",
   "contentHostUrl": "https://content.da.live/ynaka-adobe/bio-rad/"
 }

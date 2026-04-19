@@ -55,9 +55,7 @@
   "filters": [
     {
       "id": "cards-category",
-      "components": [
-        "card"
-      ]
+      "components": ["card"]
     }
   ]
 }
