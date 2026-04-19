@@ -1,0 +1,101 @@
+/* Hero Banner - Bio-Rad homepage hero with green gradient background */
+.hero-banner-container {
+  background: linear-gradient(135deg, #006d35 0%, #008943 40%, #00a851 100%);
+}
+
+.hero-banner-container .hero-banner-wrapper {
+  max-width: unset;
+  padding: 0;
+}
+
+.hero-banner {
+  position: relative;
+  padding: 48px 24px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-banner > div:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-banner > div:first-child picture,
+.hero-banner > div:first-child img {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-banner > div:last-child {
+  position: relative;
+  z-index: 1;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 350px;
+}
+
+.hero-banner h1 {
+  color: var(--color-text-primary);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 200;
+  line-height: 1.28;
+  margin-bottom: 24px;
+}
+
+.hero-banner p {
+  color: var(--color-text-primary);
+  font-size: var(--body-font-size-l);
+  font-weight: 200;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.hero-banner a {
+  display: inline-block;
+  background-color: var(--color-brand-green);
+  color: var(--color-white);
+  padding: 15px 24px;
+  border-radius: 48px;
+  border: 1px solid var(--color-brand-green);
+  font-weight: 400;
+  font-size: var(--body-font-size-l);
+  text-decoration: none;
+  transition: var(--button-transition);
+  line-height: 1;
+}
+
+.hero-banner a:hover {
+  background-color: var(--color-brand-green-dark);
+  border-color: var(--color-brand-green-dark);
+  color: var(--color-white);
+}
+
+/* Mobile */
+@media (width < 900px) {
+  .hero-banner > div:first-child picture,
+  .hero-banner > div:first-child img {
+    width: 100%;
+    opacity: 0.3;
+  }
+
+  .hero-banner > div:last-child {
+    max-width: 100%;
+    min-height: 250px;
+  }
+
+  .hero-banner h1 {
+    font-size: 36px;
+  }
+}

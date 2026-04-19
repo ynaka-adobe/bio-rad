@@ -3,83 +3,116 @@
     {
       "name": "homepage",
       "urls": [
-        "https://www.cat.com/en_US.html"
+        "https://www.bio-rad.com/en-us"
       ],
-      "description": "Cat.com US English homepage with hero content, product categories, and promotional sections",
+      "description": "Bio-Rad US English homepage with hero content, product categories, and promotional sections",
       "blocks": [
         {
           "name": "hero-banner",
-          "instances": ["[data-component='teaser--hero']"]
-        },
-        {
-          "name": "cards-category",
-          "instances": ["[data-component='list']"]
-        },
-        {
-          "name": "cards-article",
-          "instances": ["[data-component='editorial-card']"]
+          "instances": [
+            ".coh-container.background-banner"
+          ]
         },
         {
           "name": "columns-feature",
-          "instances": [".offers-personalization [data-component='teaser']"]
+          "instances": [
+            ".home-featured-product"
+          ]
         },
         {
-          "name": "columns-links",
-          "instances": [".hp-personalization-quick-links"]
+          "name": "cards-category",
+          "instances": [
+            ".coh-container.home-popular-products"
+          ]
         },
         {
-          "name": "cards-info",
-          "instances": [".hp-personalization-about"]
+          "name": "columns-product",
+          "instances": [
+            ".paragraph--type--featured-product"
+          ]
+        },
+        {
+          "name": "cards-news",
+          "instances": [
+            ".coh-container.home-recent-news"
+          ]
+        },
+        {
+          "name": "cards-promo",
+          "instances": [
+            ".coh-container.home-promotion-module"
+          ]
         }
       ],
       "sections": [
         {
           "id": "section-1",
           "name": "Hero Banner",
-          "selector": ".hp-personlization-teaser-hero",
+          "selector": ".coh-container.background-banner",
           "style": null,
-          "blocks": ["hero-banner"],
+          "blocks": [
+            "hero-banner"
+          ],
           "defaultContent": []
         },
         {
           "id": "section-2",
-          "name": "Product Categories",
-          "selector": ".interactive-studio-content-spot",
+          "name": "Your Work Our Purpose",
+          "selector": ".home-featured-product",
           "style": null,
-          "blocks": ["cards-category"],
-          "defaultContent": ["[data-component='title'] h2"]
-        },
-        {
-          "id": "section-3",
-          "name": "Featured Articles",
-          "selector": ".hp-personalization-articles",
-          "style": null,
-          "blocks": ["cards-article"],
+          "blocks": [
+            "columns-feature"
+          ],
           "defaultContent": []
         },
         {
+          "id": "section-3",
+          "name": "Popular Product Categories",
+          "selector": ".coh-container.home-popular-products",
+          "style": null,
+          "blocks": [
+            "cards-category"
+          ],
+          "defaultContent": [
+            "h2",
+            "a[href='/en-us/p']"
+          ]
+        },
+        {
           "id": "section-4",
-          "name": "Feature Teaser",
-          "selector": ".offers-personalization",
-          "style": "cat-yellow",
-          "blocks": ["columns-feature"],
+          "name": "Featured Products",
+          "selector": ".paragraph--type--featured-product",
+          "style": null,
+          "blocks": [
+            "columns-product"
+          ],
           "defaultContent": []
         },
         {
           "id": "section-5",
-          "name": "Services & Support Grid",
-          "selector": ".hp-personalization-quick-links",
+          "name": "Latest from Bio-Rad",
+          "selector": ".coh-container.home-recent-news",
           "style": "light-gray",
-          "blocks": ["columns-links"],
-          "defaultContent": []
+          "blocks": [
+            "cards-news"
+          ],
+          "defaultContent": [
+            "h2",
+            "a[href='/en-us/nws']"
+          ]
         },
         {
           "id": "section-6",
-          "name": "Info Cards",
-          "selector": ".hp-personalization-about",
+          "name": "Promotions",
+          "selector": ".coh-container.home-promotion-module",
           "style": null,
-          "blocks": ["cards-info"],
-          "defaultContent": []
+          "blocks": [
+            "cards-promo"
+          ],
+          "defaultContent": [
+            "h2",
+            "a[href='/promotions']"
+          ]
         }
       ]
     }

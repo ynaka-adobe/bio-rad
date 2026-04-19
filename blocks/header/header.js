@@ -1,4 +1,4 @@
-import { getConfig, getMetadata } from '../../scripts/ak.js';
+import { getConfig, getMetadata, loadArea } from '../../scripts/ak.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { setColorScheme } from '../section-metadata/section-metadata.js';
 
@@ -187,7 +187,20 @@ export default async function init(el) {
   const headerMeta = getMetadata('header');
   const path = headerMeta || HEADER_PATH;
   try {
-    const fragment = await loadFragment(`${locale.prefix}${path}`);
+    // Try .plain.html first (local content), fall back to full page
+    let fragment;
+    const plainResp = await fetch(`${locale.prefix}${path}.plain.html`);
+    if (plainResp.ok) {
+      const html = await plainResp.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const sections = doc.querySelectorAll(':scope > body > div');
+      fragment = document.createElement('div');
+      fragment.classList.add('fragment-content');
+      fragment.append(...sections);
+      await loadArea({ area: fragment });
+    } else {
+      fragment = await loadFragment(`${locale.prefix}${path}`);
+    }
     fragment.classList.add('header-content');
     await decorateHeader(fragment);
     el.append(fragment);

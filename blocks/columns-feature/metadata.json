@@ -1,0 +1,39 @@
+{
+  "variantName": "columns-feature",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-04-19T05:07:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.bio-rad.com/en-us",
+    "originPage": "Bio-Rad US homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "feature-highlight",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + paragraph + CTA",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "feature highlight sections with image and text",
+      "mission statement sections",
+      "about sections with side-by-side layout"
+    ],
+    "notSuitableFor": [
+      "product comparison grids",
+      "multi-item card layouts",
+      "text-only sections"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/en-us"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-19T05:07:00.000Z"
+  }
+}

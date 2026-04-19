@@ -1,0 +1,65 @@
+/* Columns Feature - "Your Work, Our Purpose" section */
+.columns-feature-container {
+  padding: 64px 24px;
+}
+
+.columns-feature-container .columns-feature-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.columns-feature > div {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+.columns-feature > div > div {
+  flex: 1;
+}
+
+.columns-feature img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.columns-feature h2 {
+  font-size: var(--heading-font-size-xl);
+  font-weight: 300;
+  margin-bottom: 16px;
+}
+
+.columns-feature p {
+  font-size: var(--body-font-size-l);
+  font-weight: 200;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.columns-feature a {
+  display: inline-block;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-dark);
+  border-radius: 48px;
+  padding: 15px 24px;
+  font-weight: 400;
+  font-size: var(--body-font-size-l);
+  text-decoration: none;
+  transition: var(--button-transition);
+  line-height: 1;
+  margin-top: 8px;
+}
+
+.columns-feature a:hover {
+  background-color: var(--color-text-primary);
+  color: var(--color-white);
+}
+
+@media (width >= 900px) {
+  .columns-feature > div {
+    flex-direction: row;
+    gap: 48px;
+  }
+}

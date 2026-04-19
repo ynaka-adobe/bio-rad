@@ -1,0 +1,92 @@
+/* Cards News - "Latest from Bio-Rad" news/events/webinar cards */
+.cards-news-container {
+  padding: 48px 24px;
+  background-color: var(--color-background-light-gray);
+}
+
+.cards-news-container .cards-news-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cards-news > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.cards-news > ul > li {
+  background-color: var(--color-white);
+  border-radius: 8px;
+  overflow: hidden;
+  border: none;
+  transition: box-shadow var(--transition-base);
+}
+
+.cards-news > ul > li:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.cards-news .cards-news-card-image {
+  line-height: 0;
+  overflow: hidden;
+}
+
+.cards-news > ul > li img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-slow);
+}
+
+.cards-news > ul > li:hover img {
+  transform: scale(1.03);
+}
+
+.cards-news .cards-news-card-body {
+  padding: 20px 24px;
+}
+
+.cards-news .cards-news-card-body em {
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--body-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-brand-green);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.cards-news .cards-news-card-body p {
+  margin: 0 0 8px;
+  font-size: var(--body-font-size-m);
+  font-weight: 200;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.cards-news .cards-news-card-body p strong {
+  font-weight: 300;
+  font-size: var(--body-font-size-l);
+  color: var(--color-text-primary);
+}
+
+.cards-news .cards-news-card-body p strong a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cards-news .cards-news-card-body p strong a:hover {
+  color: var(--color-brand-green);
+}
+
+@media (width >= 900px) {
+  .cards-news > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

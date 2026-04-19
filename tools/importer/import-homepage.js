@@ -1,99 +1,99 @@
 /* eslint-disable */
 /* global WebImporter */
 
-// PARSER IMPORTS - All parsers for the homepage template
+// PARSER IMPORTS - All parsers for the Bio-Rad homepage template
 import heroBannerParser from './parsers/hero-banner.js';
-import cardsCategoryParser from './parsers/cards-category.js';
-import cardsArticleParser from './parsers/cards-article.js';
 import columnsFeatureParser from './parsers/columns-feature.js';
-import columnsLinksParser from './parsers/columns-links.js';
-import cardsInfoParser from './parsers/cards-info.js';
+import cardsCategoryParser from './parsers/cards-category.js';
+import columnsProductParser from './parsers/columns-product.js';
+import cardsNewsParser from './parsers/cards-news.js';
+import cardsPromoParser from './parsers/cards-promo.js';
 
-// TRANSFORMER IMPORTS - All transformers for Cat.com
-import catCleanupTransformer from './transformers/cat-cleanup.js';
-import catSectionsTransformer from './transformers/cat-sections.js';
+// TRANSFORMER IMPORTS - All transformers for Bio-Rad
+import bioradCleanupTransformer from './transformers/biorad-cleanup.js';
+import bioradSectionsTransformer from './transformers/biorad-sections.js';
 
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json
 const PAGE_TEMPLATE = {
   name: 'homepage',
-  description: 'Cat.com US English homepage with hero content, product categories, and promotional sections',
+  description: 'Bio-Rad US English homepage with hero content, product categories, and promotional sections',
   urls: [
-    'https://www.cat.com/en_US.html',
+    'https://www.bio-rad.com/en-us',
   ],
   blocks: [
     {
       name: 'hero-banner',
-      instances: ["[data-component='teaser--hero']"],
-    },
-    {
-      name: 'cards-category',
-      instances: ["[data-component='list']"],
-    },
-    {
-      name: 'cards-article',
-      instances: ["[data-component='editorial-card']"],
+      instances: ['.coh-container.background-banner'],
     },
     {
       name: 'columns-feature',
-      instances: [".offers-personalization [data-component='teaser']"],
+      instances: ['.home-featured-product'],
     },
     {
-      name: 'columns-links',
-      instances: ['.hp-personalization-quick-links'],
+      name: 'cards-category',
+      instances: ['.coh-container.home-popular-products'],
     },
     {
-      name: 'cards-info',
-      instances: ['.hp-personalization-about'],
+      name: 'columns-product',
+      instances: ['.paragraph--type--featured-product'],
+    },
+    {
+      name: 'cards-news',
+      instances: ['.coh-container.home-recent-news'],
+    },
+    {
+      name: 'cards-promo',
+      instances: ['.coh-container.home-promotion-module'],
     },
   ],
   sections: [
     {
       id: 'section-1',
       name: 'Hero Banner',
-      selector: '.hp-personlization-teaser-hero',
+      selector: '.coh-container.background-banner',
       style: null,
       blocks: ['hero-banner'],
       defaultContent: [],
     },
     {
       id: 'section-2',
-      name: 'Product Categories',
-      selector: '.interactive-studio-content-spot',
+      name: 'Your Work Our Purpose',
+      selector: '.home-featured-product',
       style: null,
-      blocks: ['cards-category'],
-      defaultContent: ["[data-component='title'] h2"],
-    },
-    {
-      id: 'section-3',
-      name: 'Featured Articles',
-      selector: '.hp-personalization-articles',
-      style: null,
-      blocks: ['cards-article'],
-      defaultContent: [],
-    },
-    {
-      id: 'section-4',
-      name: 'Feature Teaser',
-      selector: '.offers-personalization',
-      style: 'cat-yellow',
       blocks: ['columns-feature'],
       defaultContent: [],
     },
     {
-      id: 'section-5',
-      name: 'Services & Support Grid',
-      selector: '.hp-personalization-quick-links',
-      style: 'light-gray',
-      blocks: ['columns-links'],
+      id: 'section-3',
+      name: 'Popular Product Categories',
+      selector: '.coh-container.home-popular-products',
+      style: null,
+      blocks: ['cards-category'],
+      defaultContent: ['h2', "a[href='/en-us/p']"],
+    },
+    {
+      id: 'section-4',
+      name: 'Featured Products',
+      selector: '.paragraph--type--featured-product',
+      style: null,
+      blocks: ['columns-product'],
       defaultContent: [],
     },
     {
+      id: 'section-5',
+      name: 'Latest from Bio-Rad',
+      selector: '.coh-container.home-recent-news',
+      style: 'light-gray',
+      blocks: ['cards-news'],
+      defaultContent: ['h2', "a[href='/en-us/nws']"],
+    },
+    {
       id: 'section-6',
-      name: 'Info Cards',
-      selector: '.hp-personalization-about',
+      name: 'Promotions',
+      selector: '.coh-container.home-promotion-module',
       style: null,
-      blocks: ['cards-info'],
-      defaultContent: [],
+      blocks: ['cards-promo'],
+      defaultContent: ['h2', "a[href='/promotions']"],
     },
   ],
 };
@@ -101,17 +101,17 @@ const PAGE_TEMPLATE = {
 // PARSER REGISTRY - Map parser names to functions
 const parsers = {
   'hero-banner': heroBannerParser,
-  'cards-category': cardsCategoryParser,
-  'cards-article': cardsArticleParser,
   'columns-feature': columnsFeatureParser,
-  'columns-links': columnsLinksParser,
-  'cards-info': cardsInfoParser,
+  'cards-category': cardsCategoryParser,
+  'columns-product': columnsProductParser,
+  'cards-news': cardsNewsParser,
+  'cards-promo': cardsPromoParser,
 };
 
 // TRANSFORMER REGISTRY - Array of transformer functions
 const transformers = [
-  catCleanupTransformer,
-  ...(PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [catSectionsTransformer] : []),
+  bioradCleanupTransformer,
+  ...(PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [bioradSectionsTransformer] : []),
 ];
 
 /**
@@ -204,7 +204,7 @@ export default {
 
     // 6. Generate sanitized path
     const path = WebImporter.FileUtils.sanitizePath(
-      new URL(params.originalURL).pathname.replace(/\/$/, '').replace(/\.html$/, '')
+      new URL(params.originalURL).pathname.replace(/\/$/, '').replace(/\.html$/, ''),
     );
 
     return [{

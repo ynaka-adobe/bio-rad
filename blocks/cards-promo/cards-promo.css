@@ -1,0 +1,89 @@
+/* Cards Promo - Promotions product cards */
+.cards-promo-container {
+  padding: 48px 24px;
+}
+
+.cards-promo-container .cards-promo-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cards-promo > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.cards-promo > ul > li {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow var(--transition-base);
+}
+
+.cards-promo > ul > li:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.cards-promo .cards-promo-card-image {
+  line-height: 0;
+  padding: 16px;
+  text-align: center;
+  background-color: var(--color-background-light-gray);
+}
+
+.cards-promo > ul > li img {
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.cards-promo .cards-promo-card-body {
+  padding: 16px 20px 20px;
+}
+
+.cards-promo .cards-promo-card-body p {
+  margin: 0 0 8px;
+  font-size: var(--body-font-size-s);
+  font-weight: 200;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.cards-promo .cards-promo-card-body p strong {
+  font-weight: 300;
+  font-size: var(--body-font-size-m);
+  color: var(--color-text-primary);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.cards-promo .cards-promo-card-body p a {
+  color: var(--color-brand-green);
+  font-weight: 400;
+  font-size: var(--body-font-size-s);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.cards-promo .cards-promo-card-body p a:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 600px) {
+  .cards-promo > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .cards-promo > ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

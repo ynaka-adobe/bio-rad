@@ -42,214 +42,246 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/hero-banner.js
   function parse(element, { document }) {
+    const bgImage = element.querySelector("figure img, picture img, img");
+    const heading = element.querySelector("h1");
+    const description = element.querySelector(".banner-h1-text p, p");
+    const ctaLink = element.querySelector('a[href]:not([href="javascript:void(0)"])');
     const cells = [];
-    const img = element.querySelector("figure img, img.lazyload, img[data-src]");
-    if (img) {
-      if (!img.src && img.dataset.src) img.src = img.dataset.src;
-      cells.push([img]);
+    if (bgImage) {
+      const imgFrag = document.createDocumentFragment();
+      imgFrag.appendChild(document.createComment(" field:image "));
+      imgFrag.appendChild(bgImage);
+      cells.push([imgFrag]);
     }
-    const contentCell = [];
-    const heading = element.querySelector("h2.teaserHeading, h2, h1");
-    if (heading) contentCell.push(heading);
-    const description = element.querySelector('p.teaser-blog-content, p:not(.teaser-date):not([style*="display: none"])');
-    if (description && description.textContent.trim()) contentCell.push(description);
-    const cta = element.querySelector('a.button, a.teaserDefaultButtonText, a[class*="button"]');
-    if (cta) {
-      cta.querySelectorAll("i, .material-icons").forEach((icon) => icon.remove());
-      contentCell.push(cta);
-    }
-    if (contentCell.length > 0) cells.push(contentCell);
+    const textFrag = document.createDocumentFragment();
+    textFrag.appendChild(document.createComment(" field:text "));
+    if (heading) textFrag.appendChild(heading);
+    if (description) textFrag.appendChild(description);
+    if (ctaLink) textFrag.appendChild(ctaLink);
+    cells.push([textFrag]);
     const block = WebImporter.Blocks.createBlock(document, { name: "hero-banner", cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/cards-category.js
+  // tools/importer/parsers/columns-feature.js
   function parse2(element, { document }) {
     const cells = [];
-    const items = element.querySelectorAll(".list__item, li.list-item, .list__list-col a");
-    const links = items.length > 0 ? items : element.querySelectorAll("a[href]");
-    links.forEach((item) => {
-      const img = item.querySelector("img, picture img");
-      const linkEl = item.tagName === "A" ? item : item.querySelector("a");
-      if (!linkEl) return;
-      if (img && !img.src && img.dataset.src) img.src = img.dataset.src;
-      const row = [];
-      if (img) row.push(img);
-      const label = linkEl.textContent.trim();
-      if (label) {
+    const img = element.querySelector("img");
+    const contentCol = [];
+    const heading = element.querySelector("h2");
+    if (heading) contentCol.push(heading);
+    const paragraphs = element.querySelectorAll("p");
+    paragraphs.forEach((p) => {
+      if (p.textContent.trim()) contentCol.push(p);
+    });
+    const cta = element.querySelector('a[href="/p"], a[href*="/en-us/"]');
+    if (cta && !contentCol.includes(cta.closest("p"))) contentCol.push(cta);
+    const imageCol = img || "";
+    if (contentCol.length > 0) cells.push([imageCol, contentCol]);
+    const block = WebImporter.Blocks.createBlock(document, { name: "columns-feature", cells });
+    element.replaceWith(block);
+  }
+
+  // tools/importer/parsers/cards-category.js
+  function parse3(element, { document }) {
+    const cells = [];
+    const articles = element.querySelectorAll("article");
+    articles.forEach((article) => {
+      const link = article.querySelector("a[href]");
+      if (!link) return;
+      const img = article.querySelector("img");
+      const imgFrag = document.createDocumentFragment();
+      imgFrag.appendChild(document.createComment(" field:image "));
+      if (img) imgFrag.appendChild(img);
+      const heading = article.querySelector("h3");
+      const textFrag = document.createDocumentFragment();
+      textFrag.appendChild(document.createComment(" field:text "));
+      if (heading) {
         const p = document.createElement("p");
         const a = document.createElement("a");
-        a.href = linkEl.href;
-        a.textContent = label;
-        p.append(a);
-        row.push(p);
+        a.href = link.href;
+        a.textContent = heading.textContent.trim();
+        p.appendChild(a);
+        textFrag.appendChild(p);
       }
-      if (row.length > 0) cells.push(row);
+      cells.push([imgFrag, textFrag]);
     });
     const block = WebImporter.Blocks.createBlock(document, { name: "cards-category", cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/cards-article.js
-  function parse3(element, { document }) {
+  // tools/importer/parsers/columns-product.js
+  function parse4(element, { document }) {
     const cells = [];
-    const cards = element.querySelectorAll(".editorial-card__item");
-    cards.forEach((card) => {
-      const img = card.querySelector("img, img.lazyload");
-      const heading = card.querySelector('h2, h3, [id="defaultHeadlineText"]');
-      const description = card.querySelector(".inner__right p, .editorial-card__item--text-wrap p");
-      const link = card.querySelector("a[href]");
-      if (img && !img.src && img.dataset.src) img.src = img.dataset.src;
-      const imageCell = img ? img : "";
-      const contentCell = [];
-      if (heading) contentCell.push(heading);
-      if (description && description.textContent.trim()) contentCell.push(description);
-      if (link) {
+    const articles = element.querySelectorAll("article");
+    articles.forEach((article) => {
+      const img = article.querySelector("img");
+      const badge = article.querySelector("em");
+      const heading = article.querySelector("h2");
+      const description = article.querySelector("p:not(:has(a))");
+      const cta = article.querySelector("a[href]");
+      const imageCol = img || "";
+      const contentCol = [];
+      if (badge) contentCol.push(badge);
+      if (heading) contentCol.push(heading);
+      if (description && description.textContent.trim()) contentCol.push(description);
+      if (cta) contentCol.push(cta);
+      if (contentCol.length > 0) cells.push([imageCol, contentCol]);
+    });
+    if (cells.length === 0) {
+      const img = element.querySelector("img");
+      const heading = element.querySelector("h2");
+      const description = element.querySelector("p");
+      const cta = element.querySelector("a[href]");
+      const contentCol = [];
+      if (heading) contentCol.push(heading);
+      if (description) contentCol.push(description);
+      if (cta) contentCol.push(cta);
+      if (contentCol.length > 0) cells.push([img || "", contentCol]);
+    }
+    const block = WebImporter.Blocks.createBlock(document, { name: "columns-product", cells });
+    element.replaceWith(block);
+  }
+
+  // tools/importer/parsers/cards-news.js
+  function parse5(element, { document }) {
+    const cells = [];
+    const articles = element.querySelectorAll("article");
+    articles.forEach((article) => {
+      const link = article.querySelector("a[href]");
+      if (!link) return;
+      const img = article.querySelector("img");
+      const imgFrag = document.createDocumentFragment();
+      imgFrag.appendChild(document.createComment(" field:image "));
+      if (img) imgFrag.appendChild(img);
+      const textFrag = document.createDocumentFragment();
+      textFrag.appendChild(document.createComment(" field:text "));
+      const category = article.querySelector("em");
+      if (category) textFrag.appendChild(category);
+      const heading = article.querySelector("h4, h3, h2");
+      if (heading) {
         const p = document.createElement("p");
         const a = document.createElement("a");
         a.href = link.href;
-        a.textContent = link.textContent.trim() || (heading == null ? void 0 : heading.textContent.trim()) || "Read more";
-        p.append(a);
-        contentCell.push(p);
+        a.textContent = heading.textContent.trim();
+        const strong = document.createElement("strong");
+        strong.appendChild(a);
+        p.appendChild(strong);
+        textFrag.appendChild(p);
       }
-      if (contentCell.length > 0) cells.push([imageCell, contentCell]);
+      const description = article.querySelector("p:not(:has(em)):not(:has(h4))");
+      if (description && description.textContent.trim()) textFrag.appendChild(description);
+      cells.push([imgFrag, textFrag]);
     });
-    const block = WebImporter.Blocks.createBlock(document, { name: "cards-article", cells });
+    const block = WebImporter.Blocks.createBlock(document, { name: "cards-news", cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/columns-feature.js
-  function parse4(element, { document }) {
-    const cells = [];
-    const teaser = element.querySelector('[data-component="teaser"]') || element;
-    const contentCol = [];
-    const heading = teaser.querySelector("h2.teaserHeading, h2, h1");
-    if (heading) contentCol.push(heading);
-    const description = teaser.querySelector("p.teaser-blog-content, .teaser__text-wrap p:not(.teaser-date)");
-    if (description && description.textContent.trim()) contentCol.push(description);
-    const cta = teaser.querySelector('a.button, a[class*="button"]');
-    if (cta) {
-      cta.querySelectorAll("i, .material-icons").forEach((icon) => icon.remove());
-      contentCol.push(cta);
-    }
-    const img = teaser.querySelector("figure img, .teaser__img-wrap img, img.lazyload");
-    if (img && !img.src && img.dataset.src) img.src = img.dataset.src;
-    const imageCol = img || "";
-    if (contentCol.length > 0) cells.push([contentCol, imageCol]);
-    const block = WebImporter.Blocks.createBlock(document, { name: "columns-feature", cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/columns-links.js
-  function parse5(element, { document }) {
-    const cells = [];
-    const columnGroups = element.querySelectorAll(":scope > .aem-Grid > .responsivegrid.hp-personalization-quick-links");
-    const groups = columnGroups.length > 0 ? columnGroups : [element];
-    const row = [];
-    groups.forEach((group) => {
-      const col = [];
-      const heading = group.querySelector('[data-component="title"] h2, .title h2, h2');
-      if (heading) col.push(heading);
-      const teasers = group.querySelectorAll('[data-component="teaser"]');
-      if (teasers.length > 0) {
-        const ul = document.createElement("ul");
-        teasers.forEach((teaser) => {
-          const link = teaser.querySelector('a.button, a[class*="button"], a[href]');
-          if (link) {
-            link.querySelectorAll("i, .material-icons").forEach((icon) => icon.remove());
-            const li = document.createElement("li");
-            const a = document.createElement("a");
-            a.href = link.href;
-            a.textContent = link.textContent.trim();
-            li.append(a);
-            ul.append(li);
-          }
-        });
-        if (ul.children.length > 0) col.push(ul);
-      }
-      if (col.length > 0) row.push(col);
-    });
-    if (row.length > 0) cells.push(row);
-    const block = WebImporter.Blocks.createBlock(document, { name: "columns-links", cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/cards-info.js
+  // tools/importer/parsers/cards-promo.js
   function parse6(element, { document }) {
     const cells = [];
-    const teasers = element.querySelectorAll('[data-component="teaser"]');
-    teasers.forEach((teaser) => {
-      const img = teaser.querySelector("figure img, img.lazyload, img[data-src]");
-      const heading = teaser.querySelector("h2.teaserHeading, h2");
-      const description = teaser.querySelector("p.teaser-blog-content, .teaser__text-wrap p:not(.teaser-date)");
-      const cta = teaser.querySelector('a.button, a[class*="button"]');
-      if (img && !img.src && img.dataset.src) img.src = img.dataset.src;
-      const imageCell = img || "";
-      const contentCell = [];
-      if (heading) contentCell.push(heading);
-      if (description && description.textContent.trim()) contentCell.push(description);
-      if (cta) {
-        cta.querySelectorAll("i, .material-icons").forEach((icon) => icon.remove());
-        contentCell.push(cta);
+    const articles = element.querySelectorAll("article");
+    articles.forEach((article) => {
+      const link = article.querySelector("a[href]");
+      if (!link) return;
+      const img = article.querySelector("img");
+      const imgFrag = document.createDocumentFragment();
+      imgFrag.appendChild(document.createComment(" field:image "));
+      if (img) imgFrag.appendChild(img);
+      const textFrag = document.createDocumentFragment();
+      textFrag.appendChild(document.createComment(" field:text "));
+      const heading = article.querySelector("h3, h2");
+      if (heading) {
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = heading.textContent.trim();
+        p.appendChild(strong);
+        textFrag.appendChild(p);
       }
-      if (contentCell.length > 0) cells.push([imageCell, contentCell]);
+      const description = article.querySelector(".promo-period-home, p");
+      if (description && description.textContent.trim()) {
+        const p = document.createElement("p");
+        p.textContent = description.textContent.trim();
+        textFrag.appendChild(p);
+      }
+      if (link.href) {
+        const p = document.createElement("p");
+        const a = document.createElement("a");
+        a.href = link.href;
+        a.textContent = link.textContent.trim() || "Learn More";
+        p.appendChild(a);
+        textFrag.appendChild(p);
+      }
+      cells.push([imgFrag, textFrag]);
     });
-    const block = WebImporter.Blocks.createBlock(document, { name: "cards-info", cells });
+    const block = WebImporter.Blocks.createBlock(document, { name: "cards-promo", cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/transformers/cat-cleanup.js
+  // tools/importer/transformers/biorad-cleanup.js
   var H = { before: "beforeTransform", after: "afterTransform" };
   function transform(hookName, element, payload) {
     if (hookName === H.before) {
       WebImporter.DOMUtils.remove(element, [
         "#onetrust-consent-sdk",
+        "#onetrust-banner-sdk",
         '[class*="cookie"]',
-        ".tfn.floating-system-notification",
-        ".skip-to-content",
-        ".skip-search-crawl",
-        "iframe"
+        ".country_select",
+        "#drift-widget"
       ]);
-      element.querySelectorAll('input[type="hidden"]').forEach((el) => el.remove());
     }
     if (hookName === H.after) {
       WebImporter.DOMUtils.remove(element, [
+        // Header and navigation
         "header",
+        "#block-biorad-brcheadercomponentblock",
+        ".top-bar-unstick",
+        "#header-main-nav",
+        "#header-login-menu2",
+        // Footer
         "footer",
-        '[role="contentinfo"]',
-        "nav",
-        ".dealerLocator",
-        ".dealers",
-        ".bottom-nav",
+        "#footer-main",
+        ".redesign-footer",
+        // Other non-authorable
+        "iframe",
+        "link",
         "noscript",
-        "link"
+        "script",
+        ".visually-hidden",
+        '[role="status"]'
       ]);
       element.querySelectorAll("*").forEach((el) => {
         el.removeAttribute("data-track");
-        el.removeAttribute("data-analytics");
         el.removeAttribute("onclick");
+        el.removeAttribute("data-drupal-selector");
       });
     }
   }
 
-  // tools/importer/transformers/cat-sections.js
+  // tools/importer/transformers/biorad-sections.js
+  var H2 = { after: "afterTransform" };
   function transform2(hookName, element, payload) {
-    if (hookName === "afterTransform") {
-      const { document } = payload;
-      const template = payload.template;
+    if (hookName === H2.after) {
+      const { template } = payload;
       if (!template || !template.sections || template.sections.length < 2) return;
+      const { document } = element.ownerDocument ? { document: element.ownerDocument } : { document };
       const sections = [...template.sections].reverse();
       sections.forEach((section) => {
-        const sectionEl = element.querySelector(section.selector);
+        const selectorList = Array.isArray(section.selector) ? section.selector : [section.selector];
+        let sectionEl = null;
+        for (const sel of selectorList) {
+          sectionEl = element.querySelector(sel);
+          if (sectionEl) break;
+        }
         if (!sectionEl) return;
         if (section.style) {
-          const metaBlock = WebImporter.Blocks.createBlock(document, {
+          const sectionMetadata = WebImporter.Blocks.createBlock(document, {
             name: "Section Metadata",
             cells: { style: section.style }
           });
-          sectionEl.after(metaBlock);
+          sectionEl.after(sectionMetadata);
         }
-        if (section.id !== "section-1") {
+        if (section.id !== template.sections[0].id) {
           const hr = document.createElement("hr");
           sectionEl.before(hr);
         }
@@ -260,94 +292,94 @@ var CustomImportScript = (() => {
   // tools/importer/import-homepage.js
   var PAGE_TEMPLATE = {
     name: "homepage",
-    description: "Cat.com US English homepage with hero content, product categories, and promotional sections",
+    description: "Bio-Rad US English homepage with hero content, product categories, and promotional sections",
     urls: [
-      "https://www.cat.com/en_US.html"
+      "https://www.bio-rad.com/en-us"
     ],
     blocks: [
       {
         name: "hero-banner",
-        instances: ["[data-component='teaser--hero']"]
-      },
-      {
-        name: "cards-category",
-        instances: ["[data-component='list']"]
-      },
-      {
-        name: "cards-article",
-        instances: ["[data-component='editorial-card']"]
+        instances: [".coh-container.background-banner"]
       },
       {
         name: "columns-feature",
-        instances: [".offers-personalization [data-component='teaser']"]
+        instances: [".home-featured-product"]
       },
       {
-        name: "columns-links",
-        instances: [".hp-personalization-quick-links"]
+        name: "cards-category",
+        instances: [".coh-container.home-popular-products"]
       },
       {
-        name: "cards-info",
-        instances: [".hp-personalization-about"]
+        name: "columns-product",
+        instances: [".paragraph--type--featured-product"]
+      },
+      {
+        name: "cards-news",
+        instances: [".coh-container.home-recent-news"]
+      },
+      {
+        name: "cards-promo",
+        instances: [".coh-container.home-promotion-module"]
       }
     ],
     sections: [
       {
         id: "section-1",
         name: "Hero Banner",
-        selector: ".hp-personlization-teaser-hero",
+        selector: ".coh-container.background-banner",
         style: null,
         blocks: ["hero-banner"],
         defaultContent: []
       },
       {
         id: "section-2",
-        name: "Product Categories",
-        selector: ".interactive-studio-content-spot",
+        name: "Your Work Our Purpose",
+        selector: ".home-featured-product",
         style: null,
-        blocks: ["cards-category"],
-        defaultContent: ["[data-component='title'] h2"]
-      },
-      {
-        id: "section-3",
-        name: "Featured Articles",
-        selector: ".hp-personalization-articles",
-        style: null,
-        blocks: ["cards-article"],
-        defaultContent: []
-      },
-      {
-        id: "section-4",
-        name: "Feature Teaser",
-        selector: ".offers-personalization",
-        style: "cat-yellow",
         blocks: ["columns-feature"],
         defaultContent: []
       },
       {
-        id: "section-5",
-        name: "Services & Support Grid",
-        selector: ".hp-personalization-quick-links",
-        style: "light-gray",
-        blocks: ["columns-links"],
+        id: "section-3",
+        name: "Popular Product Categories",
+        selector: ".coh-container.home-popular-products",
+        style: null,
+        blocks: ["cards-category"],
+        defaultContent: ["h2", "a[href='/en-us/p']"]
+      },
+      {
+        id: "section-4",
+        name: "Featured Products",
+        selector: ".paragraph--type--featured-product",
+        style: null,
+        blocks: ["columns-product"],
         defaultContent: []
       },
       {
+        id: "section-5",
+        name: "Latest from Bio-Rad",
+        selector: ".coh-container.home-recent-news",
+        style: "light-gray",
+        blocks: ["cards-news"],
+        defaultContent: ["h2", "a[href='/en-us/nws']"]
+      },
+      {
         id: "section-6",
-        name: "Info Cards",
-        selector: ".hp-personalization-about",
+        name: "Promotions",
+        selector: ".coh-container.home-promotion-module",
         style: null,
-        blocks: ["cards-info"],
-        defaultContent: []
+        blocks: ["cards-promo"],
+        defaultContent: ["h2", "a[href='/promotions']"]
       }
     ]
   };
   var parsers = {
     "hero-banner": parse,
-    "cards-category": parse2,
-    "cards-article": parse3,
-    "columns-feature": parse4,
-    "columns-links": parse5,
-    "cards-info": parse6
+    "columns-feature": parse2,
+    "cards-category": parse3,
+    "columns-product": parse4,
+    "cards-news": parse5,
+    "cards-promo": parse6
   };
   var transformers = [
     transform,

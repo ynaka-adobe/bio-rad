@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-promo",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-04-19T05:07:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.bio-rad.com/en-us",
+    "originPage": "Bio-Rad US homepage",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "promotions",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + description + link",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "promotional product cards",
+      "deal/discount showcases",
+      "product offer grids"
+    ],
+    "notSuitableFor": [
+      "news or article cards",
+      "category navigation grids",
+      "simple text cards without images"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/en-us"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-19T05:07:00.000Z"
+  }
+}

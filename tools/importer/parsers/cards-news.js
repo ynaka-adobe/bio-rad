@@ -2,15 +2,15 @@
 /* global WebImporter */
 
 /**
- * Parser for cards-category. Base: cards. Source: https://www.bio-rad.com/en-us
+ * Parser for cards-news. Base: cards. Source: https://www.bio-rad.com/en-us
  * Model fields: image (reference), text (richtext)
- * Block structure: Each row = [image cell, text cell] per card
- * Cards: PCR & qPCR, Blood Typing, Western Blot, Classroom Education, Food & Beverage Testing, Antibodies
+ * Block structure: Each row = [image cell, text cell] per news/event card
+ * Cards: Latest from Bio-Rad news, events, and webinars
  */
 export default function parse(element, { document }) {
   const cells = [];
 
-  // Each article is a product category card
+  // Each article is a news/event/webinar card
   const articles = element.querySelectorAll('article');
 
   articles.forEach((article) => {
@@ -23,22 +23,31 @@ export default function parse(element, { document }) {
     imgFrag.appendChild(document.createComment(' field:image '));
     if (img) imgFrag.appendChild(img);
 
-    // Text cell: heading as linked text with field hint
-    const heading = article.querySelector('h3');
+    // Text cell: category + heading + description + date with field hint
     const textFrag = document.createDocumentFragment();
     textFrag.appendChild(document.createComment(' field:text '));
+
+    const category = article.querySelector('em');
+    if (category) textFrag.appendChild(category);
+
+    const heading = article.querySelector('h4, h3, h2');
     if (heading) {
       const p = document.createElement('p');
       const a = document.createElement('a');
       a.href = link.href;
       a.textContent = heading.textContent.trim();
-      p.appendChild(a);
+      const strong = document.createElement('strong');
+      strong.appendChild(a);
+      p.appendChild(strong);
       textFrag.appendChild(p);
     }
+
+    const description = article.querySelector('p:not(:has(em)):not(:has(h4))');
+    if (description && description.textContent.trim()) textFrag.appendChild(description);
 
     cells.push([imgFrag, textFrag]);
   });
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'cards-category', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'cards-news', cells });
   element.replaceWith(block);
 }

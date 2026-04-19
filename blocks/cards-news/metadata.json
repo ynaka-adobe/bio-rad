@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-news",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-04-19T05:07:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.bio-rad.com/en-us",
+    "originPage": "Bio-Rad US homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "news-events",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + category-label + heading + description + date",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "news and events listings",
+      "webinar announcements",
+      "blog post cards with dates and categories"
+    ],
+    "notSuitableFor": [
+      "product category navigation",
+      "promotional cards",
+      "simple image-title cards"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/en-us"],
+    "reuseCount": 1,
+    "lastUsed": "2026-04-19T05:07:00.000Z"
+  }
+}
