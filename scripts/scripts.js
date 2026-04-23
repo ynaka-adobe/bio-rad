@@ -1,6 +1,18 @@
 import { loadArea, setConfig } from './ak.js';
+import { runExperimentation } from './experiment-loader.js';
 
 const hostnames = ['authorkit.dev'];
+
+const experimentationConfig = {
+  prodHost: 'www.bio-rad.com',
+  audiences: {
+    mobile: () => window.innerWidth < 600,
+    desktop: () => window.innerWidth >= 600,
+  },
+  decorateFunction: async (el) => {
+    await loadArea({ area: el });
+  },
+};
 
 const locales = {
   '': { lang: 'en' },
@@ -35,6 +47,7 @@ const decorateArea = ({ area = document }) => {
 
 export async function loadPage() {
   setConfig({ hostnames, locales, linkBlocks, components, decorateArea });
+  await runExperimentation(document, experimentationConfig);
   await loadArea();
 }
 
