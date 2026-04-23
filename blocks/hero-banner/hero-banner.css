@@ -1,6 +1,12 @@
-/* Hero Banner - Bio-Rad homepage hero with green gradient background */
+/* Hero Banner - Bio-Rad homepage hero, full-width image with content overlay */
+
+/* Remove section padding so image goes edge-to-edge */
+.section:has(.hero-banner) {
+  padding: 0;
+}
+
 .hero-banner-container {
-  background: linear-gradient(135deg, #006d35 0%, #008943 40%, #00a851 100%);
+  background-color: #f0f5ef;
 }
 
 .hero-banner-container .hero-banner-wrapper {
@@ -10,92 +16,101 @@
 
 .hero-banner {
   position: relative;
-  padding: 48px 24px;
-  min-height: 400px;
+  min-height: 500px;
   display: flex;
-  flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
+  align-items: center;
 }
 
+/* Image - full width background */
 .hero-banner > div:first-child {
   position: absolute;
   inset: 0;
   z-index: 0;
-  overflow: hidden;
 }
 
-.hero-banner > div:first-child picture,
+.hero-banner > div:first-child div,
+.hero-banner > div:first-child p,
+.hero-banner > div:first-child picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .hero-banner > div:first-child img {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 60%;
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: right center;
+  display: block;
 }
 
+/* Text overlay */
 .hero-banner > div:last-child {
   position: relative;
   z-index: 1;
-  max-width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 350px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  width: 100%;
 }
 
 .hero-banner h1 {
-  color: var(--color-text-primary);
-  font-size: var(--heading-font-size-xxl);
+  color: var(--color-text-primary, #222);
+  font-size: var(--heading-font-size-xxl, 61px);
   font-weight: 200;
-  line-height: 1.28;
+  line-height: 1.2;
   margin-bottom: 24px;
+  max-width: 550px;
 }
 
 .hero-banner p {
-  color: var(--color-text-primary);
-  font-size: var(--body-font-size-l);
+  color: var(--color-text-primary, #222);
+  font-size: var(--body-font-size-l, 18px);
   font-weight: 200;
   line-height: 1.5;
   margin-bottom: 24px;
+  max-width: 520px;
 }
 
 .hero-banner a {
   display: inline-block;
-  background-color: var(--color-brand-green);
-  color: var(--color-white);
+  background-color: var(--color-brand-green, #008943);
+  color: #fff;
   padding: 15px 24px;
   border-radius: 48px;
-  border: 1px solid var(--color-brand-green);
+  border: 1px solid var(--color-brand-green, #008943);
   font-weight: 400;
-  font-size: var(--body-font-size-l);
+  font-size: var(--body-font-size-l, 18px);
   text-decoration: none;
-  transition: var(--button-transition);
+  transition: all 0.2s ease;
   line-height: 1;
 }
 
 .hero-banner a:hover {
-  background-color: var(--color-brand-green-dark);
-  border-color: var(--color-brand-green-dark);
-  color: var(--color-white);
+  background-color: var(--color-brand-green-dark, #006d35);
+  border-color: var(--color-brand-green-dark, #006d35);
+  color: #fff;
 }
 
 /* Mobile */
 @media (width < 900px) {
-  .hero-banner > div:first-child picture,
-  .hero-banner > div:first-child img {
-    width: 100%;
-    opacity: 0.3;
+  .hero-banner {
+    min-height: 350px;
   }
 
   .hero-banner > div:last-child {
-    max-width: 100%;
-    min-height: 250px;
+    padding: 40px 24px;
   }
 
   .hero-banner h1 {
     font-size: 36px;
+    max-width: 100%;
+  }
+
+  .hero-banner p {
+    max-width: 100%;
   }
 }

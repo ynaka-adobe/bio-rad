@@ -4,7 +4,7 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url("https://www.bio-rad.com/themes/custom/biorad/fonts/Bio-Type-Regular.woff2") format("woff2");
+  src: url("/styles/fonts/Bio-Type-Regular.woff2") format("woff2");
 }
 
 /* Fallback fonts matched to Bio-Type metrics */
@@ -84,7 +84,7 @@
   --button-transition: all 0.2s ease;
 
   /* Misc */
-  --header-height: 64px;
+  --header-height: 198px;
   --border-radius: 8px;
 
   /* Shadows */
@@ -109,6 +109,7 @@ html {
 
 body {
   margin: 0;
+  padding-top: var(--header-height);
   background-color: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-family);
@@ -349,8 +350,9 @@ main .section.dark h3 {
 /* ===== HEADER/FOOTER PLACEHOLDER ===== */
 
 header {
-  display: none;
+  display: block;
   height: var(--header-height);
+  background-color: #fff;
 }
 
 /* ===== RESPONSIVE ===== */

@@ -1,7 +1,7 @@
 /* Cards Category - "Popular Product Categories" grid */
 .cards-category-container {
   padding: 48px 24px;
-  border-top: 1px solid var(--color-border);
+  background-color: #edf1ec;
 }
 
 .cards-category-container .cards-category-wrapper {
@@ -14,17 +14,13 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: 1fr;
   gap: 0;
 }
 
 .cards-category > ul > li {
-  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid #c5cbc4;
   background-color: transparent;
-}
-
-.cards-category > ul > li:last-child {
-  border-bottom: none;
 }
 
 .cards-category .cards-category-card-image {
@@ -32,7 +28,7 @@
 }
 
 .cards-category .cards-category-card-body {
-  padding: 16px 0;
+  padding: 0;
 }
 
 .cards-category .cards-category-card-body p {
@@ -43,28 +39,30 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--color-text-primary);
+  color: var(--color-text-primary, #222);
   text-decoration: none;
-  font-size: var(--body-font-size-l);
+  font-size: var(--body-font-size-l, 18px);
   font-weight: 200;
-  padding: 8px 0;
-  transition: color var(--transition-base);
+  padding: 24px 0;
+  transition: color 0.2s ease;
 }
 
 .cards-category .cards-category-card-body a::after {
   content: "\2192";
   font-size: 20px;
-  color: var(--color-text-primary);
-  transition: transform var(--transition-base);
+  color: var(--color-text-primary, #222);
+  flex-shrink: 0;
+  margin-left: 16px;
+  transition: transform 0.2s ease;
 }
 
 .cards-category .cards-category-card-body a:hover {
-  color: var(--color-brand-green);
+  color: var(--color-brand-green, #008943);
 }
 
 .cards-category .cards-category-card-body a:hover::after {
   transform: translateX(4px);
-  color: var(--color-brand-green);
+  color: var(--color-brand-green, #008943);
 }
 
 @media (width >= 900px) {
@@ -73,7 +71,7 @@
     gap: 0 48px;
   }
 
-  .cards-category > ul > li:nth-last-child(-n+3) {
-    border-bottom: none;
+  .cards-category > ul > li:nth-child(-n+3) {
+    border-top: 1px solid #c5cbc4;
   }
 }
