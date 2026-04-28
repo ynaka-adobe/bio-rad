@@ -1,8 +1,36 @@
 import { getConfig, getMetadata, loadArea } from '../../scripts/ak.js';
 import { loadFragment } from '../fragment/fragment.js';
 
-const { locale } = getConfig();
 const HEADER_PATH = '/fragments/nav/header';
+/** Shipped alone so live sites with a 3-row header fragment can still load the utility bar */
+const HEADER_UTILITY_PATH = '/fragments/nav/header-utility.plain.html';
+
+/**
+ * Published `header.plain.html` on AEM sometimes omits the top utility row (Quick Order, etc.).
+ * Detect the 3-block shape that starts with the logo row and prepend utility HTML when available.
+ * @param {HTMLElement[]} bodyDivs Direct children of parsed fragment body
+ * @returns {boolean}
+ */
+function shouldPrependUtilityBar(bodyDivs) {
+  if (bodyDivs.length !== 3) return false;
+  const first = bodyDivs[0];
+  const text = first.textContent.toLowerCase();
+  if (text.includes('quick order') || text.includes('order status') || text.includes('help center')) {
+    return false;
+  }
+  return Boolean(first.querySelector('picture, img'));
+}
+
+async function mergeUtilityBarIfNeeded(bodyDivs, localePrefix) {
+  if (!shouldPrependUtilityBar(bodyDivs)) return bodyDivs;
+  const url = `${localePrefix}${HEADER_UTILITY_PATH}`;
+  const utilResp = await fetch(url);
+  if (!utilResp.ok) return bodyDivs;
+  const udoc = new DOMParser().parseFromString(await utilResp.text(), 'text/html');
+  const utilityDivs = [...udoc.querySelectorAll(':scope > body > div')];
+  if (!utilityDivs.length) return bodyDivs;
+  return [...utilityDivs, ...bodyDivs];
+}
 
 async function loadSvgIcons(container) {
   const icons = container.querySelectorAll('.icon');
@@ -102,7 +130,7 @@ async function decorateHeader(fragment) {
 
   // Decorate top nav
   if (topnavSection) {
-    topnavSection.classList.add('topnav-section');
+    topnavSection.classList.add('topnav-section', 'global-utility-nav');
     await loadSvgIcons(topnavSection);
   }
 
@@ -122,7 +150,7 @@ async function decorateHeader(fragment) {
     }
   }
 
-  // Decorate nav (hidden by default, shown in slide-out panel)
+  // Primary site links (Specialties, Products, …) — slide-out on all breakpoints
   if (navSection) {
     navSection.classList.add('main-nav-section');
   }
@@ -191,13 +219,15 @@ async function decorateHeader(fragment) {
 export default async function init(el) {
   const headerMeta = getMetadata('header');
   const path = headerMeta || HEADER_PATH;
+  const { locale } = getConfig();
   try {
     let fragment;
     const plainResp = await fetch(`${locale.prefix}${path}.plain.html`);
     if (plainResp.ok) {
       const html = await plainResp.text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
-      const pageSections = doc.querySelectorAll(':scope > body > div');
+      let pageSections = [...doc.querySelectorAll(':scope > body > div')];
+      pageSections = await mergeUtilityBarIfNeeded(pageSections, locale.prefix);
       fragment = document.createElement('div');
       fragment.classList.add('fragment-content');
       fragment.append(...pageSections);

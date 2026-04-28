@@ -28,10 +28,12 @@ header {
     color: var(--color-text-primary, #222);
   }
 
-  /* ===== TOP NAV BAR ===== */
-  .topnav-section {
+  /* ===== TOP UTILITY BAR (Quick Order, Order Status, Help, locale) ===== */
+  .topnav-section,
+  .global-utility-nav {
     background-color: var(--color-background-light-gray, #f4f4f4);
     border-bottom: 1px solid var(--color-border, #dadada);
+    flex-shrink: 0;
 
     .default-content {
       max-width: var(--grid-container-width, 1200px);
@@ -42,7 +44,8 @@ header {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      gap: 24px;
+      flex-wrap: wrap;
+      gap: 12px 24px;
       padding: 6px 16px;
     }
 
@@ -359,7 +362,8 @@ header {
       max-width: 500px;
     }
 
-    .topnav-section .default-content {
+    .topnav-section .default-content,
+    .global-utility-nav .default-content {
       padding: 6px 24px;
     }
   }
