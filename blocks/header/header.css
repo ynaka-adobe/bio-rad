@@ -63,6 +63,7 @@ header {
       text-decoration: underline;
     }
 
+    svg.icon,
     .icon svg {
       width: 18px;
       height: 18px;

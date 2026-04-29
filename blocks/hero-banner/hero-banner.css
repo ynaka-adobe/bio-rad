@@ -1,4 +1,4 @@
-/* Hero Banner - Bio-Rad homepage hero, full-width image with content overlay */
+/* Hero Banner - Bio-Rad homepage hero, full-width bg + text left / video right */
 
 /* Remove section padding so image goes edge-to-edge */
 .section:has(.hero-banner) {
@@ -21,7 +21,7 @@
   align-items: center;
 }
 
-/* Image - full width background */
+/* Background image - full width */
 .hero-banner > div:first-child {
   position: absolute;
   inset: 0;
@@ -47,7 +47,7 @@
   display: block;
 }
 
-/* Text overlay */
+/* Content row: text left + video right */
 .hero-banner > div:last-child {
   position: relative;
   z-index: 1;
@@ -55,6 +55,31 @@
   margin: 0 auto;
   padding: 64px 24px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Text column */
+.hero-banner > div:last-child > div:first-child {
+  flex: 1;
+}
+
+/* Video column */
+.hero-banner > div:last-child > div:last-child {
+  flex: 0 0 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-banner video {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 80%);
+  box-shadow: 0 4px 24px rgb(0 0 0 / 8%);
 }
 
 .hero-banner h1 {
@@ -95,6 +120,15 @@
   color: #fff;
 }
 
+/* Desktop: side-by-side text + video */
+@media (width >= 900px) {
+  .hero-banner > div:last-child {
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
+  }
+}
+
 /* Mobile */
 @media (width < 900px) {
   .hero-banner {
@@ -111,6 +145,10 @@
   }
 
   .hero-banner p {
+    max-width: 100%;
+  }
+
+  .hero-banner video {
     max-width: 100%;
   }
 }

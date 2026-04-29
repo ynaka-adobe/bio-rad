@@ -1,9 +1,19 @@
 /* Columns Feature - "Your Work, Our Purpose" section */
-.columns-feature-container {
+.section:has(.columns-feature) {
+  background-color: #fff;
   padding: 64px 24px;
 }
 
+.columns-feature-container {
+  padding: 0;
+}
+
 .columns-feature-container .columns-feature-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.columns-feature {
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -38,7 +48,21 @@
   color: var(--color-text-primary);
 }
 
-.columns-feature a {
+/* Inline links - normal text link style */
+.columns-feature p a {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  font-weight: 200;
+  transition: color 0.2s ease;
+}
+
+.columns-feature p a:hover {
+  color: var(--color-brand-green, #008943);
+}
+
+/* Standalone CTA button - only when link is sole child of a <p> */
+.columns-feature .button-container a,
+.columns-feature p:last-child > a:only-child {
   display: inline-block;
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-dark);
@@ -52,7 +76,8 @@
   margin-top: 8px;
 }
 
-.columns-feature a:hover {
+.columns-feature .button-container a:hover,
+.columns-feature p:last-child > a:only-child:hover {
   background-color: var(--color-text-primary);
   color: var(--color-white);
 }
