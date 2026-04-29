@@ -12,6 +12,10 @@
 
 import { fetchSchedule, fetchFromAem } from './handlers/aem.js';
 import fetchDaSc from './handlers/dasc.js';
+import fetchTarget from './handlers/target.js';
+
+/** Client → worker path prefix; forwards to Target at `env.TARGET_HOSTNAME` (see handlers/target.js). */
+const TARGET_PROXY_PREFIX = '/adobe/target';
 
 const ROUTES = [
   // Handle schedule manifests
@@ -113,6 +117,18 @@ export default {
 
     const rumResp = getRUMRequest(req, url);
     if (rumResp) return rumResp;
+
+    if (url.pathname.startsWith(TARGET_PROXY_PREFIX)) {
+      const upstreamUrl = new URL(url.href);
+      upstreamUrl.pathname =
+        url.pathname.slice(TARGET_PROXY_PREFIX.length) || '/';
+      return fetchTarget({
+        url: upstreamUrl,
+        env,
+        savedSearch: url.search,
+        originalRequest: req,
+      });
+    }
 
     const request = formatRequest(env, req, url);
 

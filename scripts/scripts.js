@@ -1,4 +1,4 @@
-import { loadArea, setConfig } from './ak.js';
+import { getConfig, getMetadata, loadArea, setConfig } from './ak.js';
 import { runExperimentation } from './experiment-loader.js';
 
 const hostnames = ['authorkit.dev'];
@@ -45,8 +45,37 @@ const decorateArea = ({ area = document }) => {
   eagerLoad(area, 'img');
 };
 
+async function loadTarget() {
+  const targetMeta = getMetadata('target');
+  if (!targetMeta) return;
+
+  window.targetGlobalSettings = {
+    serverDomain: hostnames[0],
+    secureOnly: true,
+    overrideMboxEdgeServer: false,
+  };
+
+  try {
+    await import('../deps/at/at.js');
+    const offers = await window.adobe.target.getOffers({
+      request: { execute: { pageLoad: {} } },
+    });
+    offers?.execute?.pageLoad?.options?.forEach((opt) => {
+      const payload = opt?.content?.[0];
+      if (!payload) return;
+      const { cssSelector, content } = payload;
+      if (!cssSelector || content == null) return;
+      const el = document.querySelector(cssSelector);
+      if (el) el.outerHTML = content;
+    });
+  } catch (e) {
+    getConfig().log(e, document.body);
+  }
+}
+
 export async function loadPage() {
   setConfig({ hostnames, locales, linkBlocks, components, decorateArea });
+  await loadTarget();
   await runExperimentation(document, experimentationConfig);
   await loadArea();
 }
