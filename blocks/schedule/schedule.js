@@ -77,13 +77,29 @@ async function loadEvent(a, event, defEvent) {
   elToReplace.remove();
 }
 
-function getDate() {
+/**
+ * Reference instant used to pick which sheet row matches (between start/end).
+ * Precedence: URL `start` (ISO-8601 or Unix seconds) → non-prod `schedule` / localStorage → Date.now().
+ */
+function getScheduleReferenceTime() {
+  const params = new URL(window.location.href).searchParams;
+  const startParam = params.get('start');
+  if (startParam !== null && startParam !== '') {
+    const trimmed = startParam.trim();
+    const fromIso = Date.parse(trimmed);
+    if (!Number.isNaN(fromIso)) {
+      return fromIso;
+    }
+    const asUnixSeconds = Number(trimmed);
+    if (trimmed !== '' && Number.isFinite(asUnixSeconds)) {
+      return Math.trunc(asUnixSeconds) * 1000;
+    }
+  }
+
   const now = Date.now();
   if (ENV === 'prod') return now;
 
-  // Attempt a simulated schedule
-  const sim = localStorage.getItem('aem-schedule')
-   || new URL(window.location.href).searchParams.get('schedule');
+  const sim = localStorage.getItem('aem-schedule') || params.get('schedule');
   return sim * 1000 || now;
 }
 
@@ -95,12 +111,12 @@ export default async function init(a) {
   }
   const { data } = await resp.json();
   data.reverse();
-  const now = getDate();
+  const referenceTime = getScheduleReferenceTime();
   const found = data.find((evt) => {
     try {
       const start = Date.parse(evt.start);
       const end = Date.parse(evt.end);
-      return now > start && now < end;
+      return referenceTime > start && referenceTime < end;
     } catch {
       config.log(`Could not get scheduled event: ${evt.name}`);
       return false;
