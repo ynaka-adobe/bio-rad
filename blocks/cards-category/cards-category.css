@@ -1,10 +1,63 @@
 /* Cards Category - "Popular Product Categories" grid */
-.cards-category-container {
-  padding: 48px 24px;
+
+/* Section header: h2 + View All on same line */
+.section:has(.cards-category) {
   background-color: #edf1ec;
+  padding: 64px 24px;
+}
+
+/* Header row (first li): h2 + "View All" side by side */
+.cards-category > ul > li:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: none;
+  grid-column: 1 / -1;
+  padding-bottom: 8px;
+}
+
+.cards-category > ul > li:first-child h2 {
+  margin: 0;
+}
+
+.cards-category > ul > li:first-child .cards-category-card-image {
+  display: block;
+}
+
+.cards-category > ul > li:first-child .cards-category-card-body a::after {
+  content: none;
+}
+
+/* "View All" as outline pill button */
+.cards-category > ul > li:first-child a {
+  display: inline-block;
+  color: var(--color-text-primary, #222);
+  border: 1px solid var(--color-text-primary, #222);
+  border-radius: 48px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.cards-category > ul > li:first-child a:hover {
+  background-color: var(--color-text-primary, #222);
+  color: #fff;
+}
+
+.cards-category-container {
+  padding: 0 0 64px;
+  background-color: transparent;
 }
 
 .cards-category-container .cards-category-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cards-category {
   max-width: 1200px;
   margin: 0 auto;
 }
