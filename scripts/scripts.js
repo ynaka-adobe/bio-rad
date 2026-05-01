@@ -60,20 +60,62 @@ async function loadTarget() {
 
   try {
     await import('../deps/at/at.js');
+    const pageLoadRequest = { execute: { pageLoad: {} } };
     const offers = await window.adobe.target.getOffers({
-      request: { execute: { pageLoad: {} } },
+      request: pageLoadRequest,
     });
-    offers?.execute?.pageLoad?.options?.forEach((opt) => {
-      const payload = opt?.content?.[0];
-      if (!payload) return;
-      const { cssSelector, content } = payload;
-      if (!cssSelector || content == null) return;
-      const el = document.querySelector(cssSelector);
-      if (el) el.outerHTML = content;
-    });
+
+    if (typeof window.adobe.target.applyOffers === 'function') {
+      await window.adobe.target.applyOffers({
+        request: pageLoadRequest,
+        response: offers,
+      });
+    } else {
+      offers?.execute?.pageLoad?.options?.forEach((opt) => {
+        const payload = opt?.content?.[0];
+        if (!payload) return;
+        const { cssSelector, content } = payload;
+        if (!cssSelector || content == null) return;
+        const el = document.querySelector(cssSelector);
+        if (el) el.outerHTML = content;
+      });
+    }
   } catch (e) {
     getConfig().log(e, document.body);
   }
+}
+
+/**
+ * Legacy mbox flow (getOffer + applyOffer), per Adobe at.js docs.
+ * Runs after blocks render so the selector exists.
+ * Opt-in: set meta target-mbox-hero to the mbox name (e.g. eds-hero-mbox).
+ * Optional: meta target-mbox-hero-selector (default .hero.block .hero-inner).
+ * Homepage uses hero-banner — use e.g. .hero-banner for that template.
+ * @see https://experienceleague.adobe.com/en/docs/target-dev/developer/client-side/at-js-implementation/functions-overview/adobe-target-applyoffer
+ */
+async function applyTargetHeroMboxIfConfigured() {
+  const mbox = getMetadata('target-mbox-hero')?.trim();
+  if (!mbox) return;
+
+  const selector = getMetadata('target-mbox-hero-selector')?.trim()
+    || '.hero.block .hero-inner';
+  const t = window.adobe?.target;
+  if (!t?.getOffer || !t?.applyOffer) return;
+
+  await new Promise((resolve) => {
+    t.getOffer({
+      mbox,
+      success(offers) {
+        if (!document.querySelector(selector)) {
+          resolve();
+          return;
+        }
+        t.applyOffer({ mbox, selector, offer: offers });
+        resolve();
+      },
+      error: resolve,
+    });
+  });
 }
 
 export async function loadPage() {
@@ -81,6 +123,7 @@ export async function loadPage() {
   await loadTarget();
   await runExperimentation(document, experimentationConfig);
   await loadArea();
+  await applyTargetHeroMboxIfConfigured();
 }
 
 const codeBase = new URL(import.meta.url).href.replace(/\/scripts\/scripts\.js$/, '');
