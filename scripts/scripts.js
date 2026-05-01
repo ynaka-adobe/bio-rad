@@ -2,9 +2,9 @@ import { getConfig, getMetadata, loadArea, setConfig } from './ak.js';
 import { runExperimentation } from './experiment-loader.js';
 
 /** Suffixes for internal link decoration (see decorateLink in ak.js). */
-const hostnames = ['aem.page', 'aem.live', 'authorkit.dev'];
+const hostnames = ['aem.page', 'aem.live', 'ynaka-adobe.aem.page', 'ynaka-adobe.aem.live'];
 
-/** Target delivery host; must match at.js / your network trace (not the page URL). */
+/** Target delivery host from at.js / delivery URL — not your site hostname (e.g. *.aem.page). */
 const targetServerDomain = 'authorkit.dev';
 
 const experimentationConfig = {
