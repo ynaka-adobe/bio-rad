@@ -106,7 +106,9 @@ async function applyTargetHeroMboxIfConfigured() {
     t.getOffer({
       mbox,
       success(offers) {
-        if (!document.querySelector(selector)) {
+        const el = document.querySelector(selector);
+        if (!el) {
+          getConfig().log(new Error(`Target mbox "${mbox}": no element for selector "${selector}"`), document.body);
           resolve();
           return;
         }

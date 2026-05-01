@@ -7,7 +7,8 @@
     <!-- <meta name="target-visitor-js" content="https://your.cdn.example/…/VisitorAPI.js"/> -->
     <!-- Optional: legacy getOffer/applyOffer mbox after blocks render (selector must match your block markup). -->
     <meta name="target-mbox-hero" content="eds-hero-mbox"/>
-    <meta name="target-mbox-hero-selector" content=".hero-banner"/>
+    <!-- Hero region on root template is columns-feature, not hero-banner (selector must exist in DOM). -->
+    <meta name="target-mbox-hero-selector" content=".columns-feature"/>
     <link rel="modulepreload" href="/scripts/experiment-loader.js"/>
     <link rel="stylesheet" href="/styles/styles.css"/>
     <script src="/deps/rum.js" type="module"></script>
