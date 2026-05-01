@@ -1,3 +1,9 @@
+/* Section wrapper: no vertical padding around header block */
+.section:has(.header) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 header {
   --logo-width: 120px;
   --logo-height: 40px;
@@ -31,7 +37,7 @@ header {
   /* ===== TOP UTILITY BAR (Quick Order, Order Status, Help, locale) ===== */
   .topnav-section,
   .global-utility-nav {
-    background-color: var(--color-background-light-gray, #f4f4f4);
+    background-color: #fff;
     border-bottom: 1px solid var(--color-border, #dadada);
     flex-shrink: 0;
 
@@ -46,7 +52,7 @@ header {
       align-items: center;
       flex-wrap: wrap;
       gap: 12px 24px;
-      padding: 2px 16px;
+      padding: 8px 16px;
     }
 
     li {
@@ -85,10 +91,11 @@ header {
     .default-content {
       display: flex;
       align-items: center;
-      height: 100px;
+      height: auto;
+      min-height: 56px;
       max-width: var(--grid-container-width, 1200px);
       margin: 0 auto;
-      padding: 0 16px;
+      padding: 10px 16px;
       gap: 16px;
     }
 
@@ -191,7 +198,7 @@ header {
     ul {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     li {
@@ -200,12 +207,73 @@ header {
     }
 
     a {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       font-size: 14px;
       font-weight: 300;
       white-space: nowrap;
+    }
+
+    .header-login-link {
+      gap: 8px;
+    }
+
+    .header-login-account {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-text-primary, #222);
+
+      svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .header-login-label {
+      letter-spacing: 0.01em;
+    }
+
+    .header-login-chevron {
+      display: inline-flex;
+      align-items: center;
+      margin-left: -2px;
+      color: var(--color-text-secondary, #555);
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .header-cart-link {
+      gap: 10px;
+    }
+
+    .header-cart-icon {
+      display: inline-flex;
+      align-items: center;
+
+      .icon svg,
+      svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    .header-cart-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background-color: var(--color-background-gray, #e8e8e8);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--color-text-secondary, #555);
+      line-height: 1;
     }
 
     .icon svg {
@@ -365,7 +433,7 @@ header {
 
     .topnav-section .default-content,
     .global-utility-nav .default-content {
-      padding: 6px 24px;
+      padding: 8px 24px;
     }
   }
 }

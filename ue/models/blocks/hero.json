@@ -49,6 +49,17 @@
           "value": "",
           "label": "Text",
           "valueType": "string"
+        },
+        {
+          "component": "multiselect",
+          "name": "classes",
+          "label": "Variants",
+          "options": [
+            {
+              "name": "Light image — dark text",
+              "value": "light"
+            }
+          ]
         }
       ]
     }

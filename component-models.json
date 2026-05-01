@@ -156,6 +156,17 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Variants",
+        "options": [
+          {
+            "name": "Light image — dark text",
+            "value": "light"
+          }
+        ]
       }
     ]
   },
@@ -237,6 +248,31 @@
         "name": "table",
         "value": "",
         "label": "Table Content"
+      }
+    ]
+  },
+  {
+    "id": "target-offer",
+    "fields": [
+      {
+        "component": "text",
+        "name": "mboxName",
+        "label": "Target mbox name",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "exportId",
+        "label": "Export / offer id",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Default content",
+        "valueType": "string"
       }
     ]
   },

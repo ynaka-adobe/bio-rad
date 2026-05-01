@@ -20,10 +20,28 @@
     --min-height: calc(100vh - var(--header-height));
   }
 
+  /* Light background imagery: dark text + light scrim (author adds class `light` on the block) */
   &.light {
-    --gradient-start: rgb(var(--color-light-base) / 80%);
+    --gradient-start: rgb(255 255 255 / 78%);
+    --gradient-end: rgb(255 255 255 / 14%);
 
-    color: var(--color-dark);
+    color: var(--color-text-primary);
+  }
+
+  &.light .hero-foreground {
+    color: var(--color-text-primary);
+  }
+
+  &.light .hero-foreground :where(h1, h2, h3, h4, h5, h6, p, li, .hero-heading, .hero-detail) {
+    color: var(--color-text-primary);
+  }
+
+  &.light .hero-foreground a:not(.button) {
+    color: var(--color-link);
+  }
+
+  &.light .hero-foreground a:not(.button):hover {
+    color: var(--color-link-hover);
   }
 
   &.dark {
@@ -174,6 +192,10 @@
       .hero-foreground {
         display: flex;
       }
+    }
+
+    &.light:not(.stack) .hero-foreground {
+      background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
     }
 
     &.stack {

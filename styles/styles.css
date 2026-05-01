@@ -84,7 +84,7 @@
   --button-transition: all 0.2s ease;
 
   /* Misc — top utility bar + brand row (see blocks/header/header.css) */
-  --header-height: 142px;
+  --header-height: 118px;
   --border-radius: 8px;
 
   /* Shadows */
@@ -318,7 +318,7 @@ select:focus {
 /* ===== SECTIONS ===== */
 
 .section {
-  padding: var(--section-padding);
+
 }
 
 .section > .default-content-wrapper {

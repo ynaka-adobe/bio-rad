@@ -60,7 +60,7 @@ async function loadEvent(a, event, defEvent) {
 
   let fragment = await loadLocalizedEvent(event);
   // Try the default event if the original match didn't work.
-  if (!fragment) fragment = await loadLocalizedEvent(defEvent);
+  if (!fragment && defEvent) fragment = await loadLocalizedEvent(defEvent);
   // If still no fragment, remove the schedule link
   if (!fragment) {
     removeSchedule(a);
@@ -78,11 +78,34 @@ async function loadEvent(a, event, defEvent) {
 }
 
 /**
+ * Optional region filter from URL `geo` (case-insensitive).
+ * Rows without a `geo` field match every region; otherwise row.geo must equal the param.
+ * @param {URLSearchParams} params page query string
+ * @returns {string | null} normalized geo or null when param absent / empty
+ */
+function getGeoFilter(params) {
+  const raw = params.get('geo');
+  if (raw === null || raw === '') return null;
+  return raw.trim().toLowerCase();
+}
+
+/**
+ * @param {object} evt schedule row from sheet JSON
+ * @param {string | null} normalizedGeo from getGeoFilter
+ */
+function matchesGeo(evt, normalizedGeo) {
+  if (!normalizedGeo) return true;
+  const rowGeo = typeof evt.geo === 'string' ? evt.geo.trim().toLowerCase() : '';
+  if (!rowGeo) return true;
+  return rowGeo === normalizedGeo;
+}
+
+/**
  * Reference instant used to pick which sheet row matches (between start/end).
  * Precedence: URL `start` (ISO-8601 or Unix seconds) → non-prod `schedule` / localStorage → Date.now().
+ * @param {URLSearchParams} [params] defaults to current page query string
  */
-function getScheduleReferenceTime() {
-  const params = new URL(window.location.href).searchParams;
+function getScheduleReferenceTime(params = new URL(window.location.href).searchParams) {
   const startParam = params.get('start');
   if (startParam !== null && startParam !== '') {
     const trimmed = startParam.trim();
@@ -111,8 +134,12 @@ export default async function init(a) {
   }
   const { data } = await resp.json();
   data.reverse();
-  const referenceTime = getScheduleReferenceTime();
+  const pageParams = new URL(window.location.href).searchParams;
+  const referenceTime = getScheduleReferenceTime(pageParams);
+  const geoFilter = getGeoFilter(pageParams);
+
   const found = data.find((evt) => {
+    if (!matchesGeo(evt, geoFilter)) return false;
     try {
       const start = Date.parse(evt.start);
       const end = Date.parse(evt.end);
@@ -123,8 +150,8 @@ export default async function init(a) {
     }
   });
 
-  // Get a default event in case the main event doesn't load
-  const defEvent = data.find((evt) => !(evt.start && evt.end));
+  // Get a default event in case the main event doesn't load (respects geo when set)
+  const defEvent = data.find((evt) => !(evt.start && evt.end) && matchesGeo(evt, geoFilter));
 
   // Use either the found event or the default
   const event = found || defEvent;

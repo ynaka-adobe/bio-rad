@@ -32,6 +32,46 @@ async function mergeUtilityBarIfNeeded(bodyDivs, localePrefix) {
   return [...utilityDivs, ...bodyDivs];
 }
 
+/** Inline SVGs for login row (profile + dropdown affordance) */
+const ICON_ACCOUNT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>`;
+
+const ICON_CHEVRON_DOWN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-login-chevron-icon" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+
+/**
+ * Match commerce header pattern: profile glyph + label + chevron.
+ * @param {HTMLAnchorElement} a
+ */
+function decorateLoginRegisterLink(a) {
+  const label = a.textContent.replace(/\s+/g, ' ').trim();
+  a.classList.add('header-login-link');
+  a.innerHTML = `<span class="header-login-account">${ICON_ACCOUNT_SVG}</span><span class="header-login-label">${label}</span><span class="header-login-chevron">${ICON_CHEVRON_DOWN_SVG}</span>`;
+}
+
+/**
+ * Cart icon + circular badge with item count.
+ * @param {HTMLAnchorElement} a
+ */
+function decorateCartControlsLink(a) {
+  const m = a.textContent.match(/(\d+)/);
+  const count = m ? m[1] : '0';
+  const iconHolder = a.querySelector('.icon');
+  const svgMarkup = iconHolder ? iconHolder.outerHTML : '';
+  a.classList.add('header-cart-link');
+  a.innerHTML = `<span class="header-cart-icon">${svgMarkup}</span><span class="header-cart-badge">${count}</span>`;
+}
+
+/**
+ * Remove stray fragment rows when Hamburger is injected by decorateHeader.
+ * @param {HTMLUListElement} ul
+ */
+function stripUtilityDuplicateNavTriggers(ul) {
+  ul.querySelectorAll(':scope > li').forEach((li) => {
+    const toggleLink = li.querySelector('a[href*="toggle"], a[href*="widgets/toggle"]');
+    const ham = li.querySelector('.icon-hamburger');
+    if (toggleLink || ham) li.remove();
+  });
+}
+
 async function loadSvgIcons(container) {
   const icons = container.querySelectorAll('.icon');
   for (const icon of icons) {
@@ -183,7 +223,13 @@ async function decorateHeader(fragment) {
         if (actionsList) {
           const actionsBar = document.createElement('div');
           actionsBar.className = 'header-actions-bar';
-          actionsBar.append(actionsList.cloneNode(true));
+          const actionsUl = actionsList.cloneNode(true);
+          stripUtilityDuplicateNavTriggers(actionsUl);
+          const loginLink = actionsUl.querySelector('a[href*="login-registration"], a[href*="login"]');
+          if (loginLink) decorateLoginRegisterLink(loginLink);
+          const cartLink = actionsUl.querySelector('a[href*="shopping-cart"], a[href*="cart"]');
+          if (cartLink) decorateCartControlsLink(cartLink);
+          actionsBar.append(actionsUl);
           brandContent.append(actionsBar);
         }
         actionsSection.remove();
