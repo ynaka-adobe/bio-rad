@@ -1,7 +1,11 @@
 import { getConfig, getMetadata, loadArea, setConfig } from './ak.js';
 import { runExperimentation } from './experiment-loader.js';
 
-const hostnames = ['authorkit.dev'];
+/** Suffixes for internal link decoration (see decorateLink in ak.js). */
+const hostnames = ['aem.page', 'aem.live', 'authorkit.dev'];
+
+/** Target delivery host; must match at.js / your network trace (not the page URL). */
+const targetServerDomain = 'authorkit.dev';
 
 const experimentationConfig = {
   prodHost: 'www.bio-rad.com',
@@ -50,7 +54,7 @@ async function loadTarget() {
   if (!targetMeta) return;
 
   window.targetGlobalSettings = {
-    serverDomain: hostnames[0],
+    serverDomain: targetServerDomain,
     secureOnly: true,
     overrideMboxEdgeServer: false,
   };
