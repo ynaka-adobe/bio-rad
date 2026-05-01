@@ -4,9 +4,6 @@ import { runExperimentation } from './experiment-loader.js';
 /** Suffixes for internal link decoration (see decorateLink in ak.js). */
 const hostnames = ['aem.page', 'aem.live', 'ynaka-adobe.aem.page', 'ynaka-adobe.aem.live'];
 
-/** Target delivery host from at.js / delivery URL — not your site hostname (e.g. *.aem.page). */
-const targetServerDomain = 'authorkit.dev';
-
 const experimentationConfig = {
   prodHost: 'www.bio-rad.com',
   audiences: {
@@ -53,10 +50,12 @@ async function loadTarget() {
   const targetMeta = getMetadata('target');
   if (!targetMeta) return;
 
+  /** Optional override; if unset, at.js uses the edge host from your built vendor-at.js. */
+  const serverDomain = getMetadata('target-server-domain')?.trim();
   window.targetGlobalSettings = {
-    serverDomain: targetServerDomain,
     secureOnly: true,
     overrideMboxEdgeServer: false,
+    ...(serverDomain ? { serverDomain } : {}),
   };
 
   try {
