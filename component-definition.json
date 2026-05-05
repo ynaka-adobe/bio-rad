@@ -195,19 +195,43 @@
           "model": "hero",
           "plugins": {
             "da": {
-              "unsafeHTML": "<div class=\"hero\"><div><div><picture><source type=\"image/webp\" srcset=\"\"><source type=\"image/jpeg\" srcset=\"\"><img loading=\"lazy\"></picture><h1></h1></div></div></div>",
+              "unsafeHTML": "<div class=\"hero\"><div><div><picture><source type=\"image/webp\" srcset=\"\"><source type=\"image/jpeg\" srcset=\"\"><img loading=\"lazy\"></picture></div></div><div><div><h1></h1></div></div></div>",
               "fields": [
                 {
                   "name": "image",
-                  "selector": "div>div>picture>img[src]"
+                  "selector": "div:first-child>div>picture>img[src]"
                 },
                 {
                   "name": "imageAlt",
-                  "selector": "div>div>picture>img[alt]"
+                  "selector": "div:first-child>div>picture>img[alt]"
                 },
                 {
                   "name": "text",
-                  "selector": "div>div>h1"
+                  "selector": "div:last-child>div>h1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Hero Banner",
+          "id": "hero-banner",
+          "model": "hero-banner",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"hero-banner\"><div><div><picture><source type=\"image/webp\" srcset=\"\"><source type=\"image/jpeg\" srcset=\"\"><img loading=\"lazy\"></picture></div></div><div><div><h1></h1><p></p><p><a href=\"\">Learn More</a></p></div></div></div>",
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div:first-child>div>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div:first-child>div>picture>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:last-child>div"
                 }
               ]
             }
