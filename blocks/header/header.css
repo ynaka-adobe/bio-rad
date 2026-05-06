@@ -137,37 +137,49 @@ header {
     }
   }
 
-  /* ===== SEARCH BAR ===== */
+  /* ===== SEARCH BAR (site-search block, header variant) ===== */
   .header-search {
     flex: 1;
     display: flex;
     align-items: center;
     max-width: 600px;
-    position: relative;
-
-    input {
-      width: 100%;
-      height: 40px;
-      border: 1px solid #ccc;
-      border-radius: 24px;
-      padding: 0 48px 0 20px;
-      font-size: 14px;
-      font-family: inherit;
-      font-weight: 200;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    input:focus {
-      border-color: var(--color-brand-green, #008943);
-    }
-
-    input::placeholder {
-      color: #999;
-    }
   }
 
-  .header-search-btn {
+  .header-search .site-search-container {
+    width: 100%;
+  }
+
+  .header-search .site-search-form {
+    position: relative;
+    width: 100%;
+    margin: 0;
+  }
+
+  .header-search input[type='search'],
+  .header-search .site-search-input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+    padding: 0 48px 0 20px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 200;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .header-search input[type='search']:focus,
+  .header-search .site-search-input:focus {
+    border-color: var(--color-brand-green, #008943);
+  }
+
+  .header-search input[type='search']::placeholder,
+  .header-search .site-search-input::placeholder {
+    color: #999;
+  }
+
+  .header-search .header-search-btn {
     position: absolute;
     right: 4px;
     top: 50%;

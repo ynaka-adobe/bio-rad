@@ -38,6 +38,18 @@ function resolveIndexUrl(block) {
   }
 }
 
+/** @param {string | URL | null | undefined} raw */
+function toSameOriginIndexUrl(raw) {
+  if (!raw) return null;
+  try {
+    const u = raw instanceof URL ? raw : new URL(raw, window.location.origin);
+    if (u.origin !== window.location.origin) return null;
+    return u;
+  } catch {
+    return null;
+  }
+}
+
 /** @param {HTMLElement} block */
 function readPlaceholder(block) {
   const paras = [...block.querySelectorAll('p')].map((p) => p.textContent.trim()).filter(Boolean);
@@ -86,16 +98,24 @@ function matches(item, q) {
   return hay.includes(nq);
 }
 
+const SEARCH_BTN_SVG = `<svg xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round"><circle cx="11"
+  cy="11" r="8"/><line x1="21" y1="21" x2="16.65"
+  y2="16.65"/></svg>`;
+
 /**
  * @param {HTMLElement} container
  * @param {Record<string, unknown>[]} items
  * @param {string} query
+ * @param {'block' | 'header'} variant
  */
-function renderResults(container, items, query) {
+function renderResults(container, items, query, variant) {
   container.textContent = '';
   const filtered = query ? items.filter((it) => matches(it, query)) : [];
 
   if (!query) {
+    if (variant === 'header') return;
     const hint = document.createElement('p');
     hint.className = 'site-search-hint';
     hint.textContent = 'Type to search indexed pages.';
@@ -134,20 +154,39 @@ function renderResults(container, items, query) {
   container.append(list);
 }
 
-export default function init(block) {
-  const indexUrl = resolveIndexUrl(block);
-  const placeholder = readPlaceholder(block);
-  const { text: headingText, tag: headingTag } = readHeading(block);
+/**
+ * @param {{
+ *   variant?: 'block' | 'header',
+ *   placeholder?: string,
+ *   label?: string,
+ *   indexUrl?: URL | string | null,
+ *   heading?: { text: string, tag: string } | null,
+ * }} options
+ * @param {HTMLElement} root
+ */
+export function initSiteSearch(root, options = {}) {
+  const variant = options.variant || 'block';
+  const placeholder = options.placeholder ?? 'Search…';
+  const labelText = options.label ?? 'Search';
+  const heading = options.heading && options.heading.text ? options.heading : null;
 
-  block.textContent = '';
+  let indexUrl = toSameOriginIndexUrl(options.indexUrl ?? null);
+  if (!indexUrl) {
+    indexUrl = resolveIndexUrl(root);
+  }
+
+  root.classList.add('site-search');
+  if (variant === 'header') root.classList.add('site-search-header');
+
+  root.textContent = '';
 
   const shell = document.createElement('div');
   shell.className = 'site-search-container';
 
-  if (headingText) {
-    const h = document.createElement(headingTag);
+  if (variant === 'block' && heading) {
+    const h = document.createElement(heading.tag);
     h.className = 'site-search-heading';
-    h.textContent = headingText;
+    h.textContent = heading.text;
     shell.append(h);
   }
 
@@ -156,8 +195,9 @@ export default function init(block) {
   form.setAttribute('role', 'search');
 
   const label = document.createElement('label');
-  label.className = 'site-search-label';
-  const labelText = headingText || 'Search';
+  label.className = variant === 'header'
+    ? 'site-search-label site-search-sr-only'
+    : 'site-search-label';
   label.textContent = labelText;
   const inputId = `site-search-${Math.random().toString(36).slice(2, 9)}`;
   label.setAttribute('for', inputId);
@@ -170,21 +210,50 @@ export default function init(block) {
   input.autocomplete = 'off';
 
   const status = document.createElement('div');
-  status.className = 'site-search-status';
+  status.className = variant === 'header'
+    ? 'site-search-status site-search-sr-only'
+    : 'site-search-status';
   status.setAttribute('aria-live', 'polite');
 
   const results = document.createElement('div');
   results.className = 'site-search-output';
 
   form.append(label, input);
-  shell.append(form, status, results);
-  block.append(shell);
+  if (variant === 'header') {
+    const btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.className = 'header-search-btn';
+    btn.setAttribute('aria-label', 'Search');
+    btn.innerHTML = SEARCH_BTN_SVG;
+    form.append(btn);
+  }
+  if (variant === 'header') {
+    shell.append(form, results, status);
+  } else {
+    shell.append(form, status, results);
+  }
+  root.append(shell);
 
   let items = [];
   let debounceTimer = 0;
 
+  const updateStatus = (q) => {
+    if (variant === 'header') {
+      if (!q) {
+        status.textContent = '';
+        return;
+      }
+      const n = items.filter((it) => matches(it, q)).length;
+      status.textContent = `${n} result${n === 1 ? '' : 's'}`;
+      return;
+    }
+    const n = q ? items.filter((it) => matches(it, q)).length : 0;
+    if (q) status.textContent = `${n} result${n === 1 ? '' : 's'}.`;
+    else status.textContent = `${items.length} pages indexed.`;
+  };
+
   if (!indexUrl) {
-    status.textContent = 'Search is not configured.';
+    if (variant === 'block') status.textContent = 'Search is not configured.';
     return;
   }
 
@@ -195,23 +264,53 @@ export default function init(block) {
     })
     .then((json) => {
       items = asItems(json);
-      status.textContent = `${items.length} pages indexed.`;
-      renderResults(results, items, '');
+      if (variant === 'block') {
+        status.textContent = `${items.length} pages indexed.`;
+      }
+      renderResults(results, items, '', variant);
     })
     .catch(() => {
-      status.textContent = 'Could not load search index.';
+      if (variant === 'block') status.textContent = 'Could not load search index.';
     });
 
-  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q || !results.querySelector('a')) return;
+    const first = results.querySelector('a');
+    if (first instanceof HTMLAnchorElement) first.click();
+  });
 
   input.addEventListener('input', () => {
     window.clearTimeout(debounceTimer);
     debounceTimer = window.setTimeout(() => {
       const q = input.value.trim();
-      renderResults(results, items, q);
-      const n = q ? items.filter((it) => matches(it, q)).length : 0;
-      if (q) status.textContent = `${n} result${n === 1 ? '' : 's'}.`;
-      else status.textContent = `${items.length} pages indexed.`;
+      renderResults(results, items, q, variant);
+      updateStatus(q);
     }, DEBOUNCE_MS);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    input.value = '';
+    renderResults(results, items, '', variant);
+    updateStatus('');
+  });
+}
+
+export default function init(block) {
+  const indexUrl = resolveIndexUrl(block);
+  const placeholder = readPlaceholder(block);
+  const heading = readHeading(block);
+  const headingForUi = heading.text ? heading : null;
+
+  block.textContent = '';
+
+  initSiteSearch(block, {
+    variant: 'block',
+    placeholder,
+    label: heading.text || 'Search',
+    heading: headingForUi,
+    indexUrl: indexUrl ?? undefined,
   });
 }

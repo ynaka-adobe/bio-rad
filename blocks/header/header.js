@@ -1,5 +1,6 @@
-import { getConfig, getMetadata, loadArea } from '../../scripts/ak.js';
+import { getConfig, getMetadata, loadArea, loadStyle } from '../../scripts/ak.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { initSiteSearch } from '../site-search/site-search.js';
 
 const HEADER_PATH = '/fragments/nav/header';
 /** Shipped alone so live sites with a 3-row header fragment can still load the utility bar */
@@ -33,9 +34,9 @@ async function mergeUtilityBarIfNeeded(bodyDivs, localePrefix) {
 }
 
 /** Inline SVGs for login row (profile + dropdown affordance) */
-const ICON_ACCOUNT_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>`;
+const ICON_ACCOUNT_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>';
 
-const ICON_CHEVRON_DOWN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-login-chevron-icon" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+const ICON_CHEVRON_DOWN_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-login-chevron-icon" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 
 /**
  * Match commerce header pattern: profile glyph + label + chevron.
@@ -205,17 +206,17 @@ async function decorateHeader(fragment) {
   if (brandSection) {
     const brandContent = brandSection.querySelector('.default-content');
     if (brandContent) {
-      // Search bar
-      const searchForm = document.createElement('div');
-      searchForm.className = 'header-search';
-      searchForm.innerHTML = `<input type="search" placeholder="Search"
-        aria-label="Search"><button class="header-search-btn"
-        aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round"><circle cx="11"
-        cy="11" r="8"/><line x1="21" y1="21" x2="16.65"
-        y2="16.65"/></svg></button>`;
-      brandContent.append(searchForm);
+      const { codeBase } = getConfig();
+      await loadStyle(`${codeBase}/blocks/site-search/site-search.css`);
+
+      const searchHost = document.createElement('div');
+      searchHost.className = 'header-search';
+      initSiteSearch(searchHost, {
+        variant: 'header',
+        placeholder: 'Search',
+        label: 'Search',
+      });
+      brandContent.append(searchHost);
 
       // Move actions into the brand row
       if (actionsSection) {
