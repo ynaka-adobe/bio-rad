@@ -134,6 +134,32 @@
     ]
   },
   {
+    "id": "hero-banner",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "hero",
     "fields": [
       {
@@ -196,32 +222,6 @@
             "value": "center"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "hero-banner",
-    "fields": [
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Image",
-        "multi": false
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "imageAlt",
-        "label": "Alt",
-        "value": ""
-      },
-      {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Text",
-        "valueType": "string"
       }
     ]
   },
@@ -291,6 +291,57 @@
         "component": "text",
         "name": "background",
         "label": "Background",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "site-search",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Heading",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "titleType",
+        "label": "Heading level",
+        "value": "h2",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "H1",
+            "value": "h1"
+          },
+          {
+            "name": "H2",
+            "value": "h2"
+          },
+          {
+            "name": "H3",
+            "value": "h3"
+          },
+          {
+            "name": "H4",
+            "value": "h4"
+          }
+        ]
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Query index URL",
+        "value": "",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "placeholder",
+        "label": "Input placeholder",
+        "value": "Search…",
         "valueType": "string"
       }
     ]
