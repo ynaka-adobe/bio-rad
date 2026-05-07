@@ -2,18 +2,26 @@ import { getConfig, getMetadata, loadArea } from '../../scripts/ak.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 const FOOTER_PATH = '/fragments/nav/footer';
+const EN_LOCALE_PREFIX = '/en';
 
 export default async function init(el) {
   const { locale } = getConfig();
   const footerMeta = getMetadata('footer');
   const path = footerMeta || FOOTER_PATH;
+  const plainUrls = locale.prefix === EN_LOCALE_PREFIX
+    ? [`${locale.prefix}${path}.plain.html`, `${path}.plain.html`]
+    : [`${locale.prefix}${path}.plain.html`];
   try {
     let fragment;
-    const plainResp = await fetch(
-      `${locale.prefix}${path}.plain.html`,
-    );
-    if (plainResp.ok) {
-      const html = await plainResp.text();
+    let html = '';
+    for (const url of plainUrls) {
+      const plainResp = await fetch(url);
+      if (plainResp.ok) {
+        html = await plainResp.text();
+        break;
+      }
+    }
+    if (html) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
       const pageSections = doc.querySelectorAll(
         ':scope > body > div',
@@ -23,9 +31,21 @@ export default async function init(el) {
       fragment.append(...pageSections);
       await loadArea({ area: fragment });
     } else {
-      fragment = await loadFragment(
-        `${locale.prefix}${path}`,
-      );
+      const fragPaths = locale.prefix === EN_LOCALE_PREFIX
+        ? [`${locale.prefix}${path}`, path]
+        : [`${locale.prefix}${path}`];
+      let loadError;
+      fragment = undefined;
+      for (const p of fragPaths) {
+        try {
+          fragment = await loadFragment(p);
+          loadError = undefined;
+          break;
+        } catch (e) {
+          loadError = e;
+        }
+      }
+      if (fragment === undefined) throw Error(loadError);
     }
     fragment.classList.add('footer-content');
 

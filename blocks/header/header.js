@@ -5,6 +5,8 @@ import { initSiteSearch } from '../site-search/site-search.js';
 const HEADER_PATH = '/fragments/nav/header';
 /** Shipped alone so live sites with a 3-row header fragment can still load the utility bar */
 const HEADER_UTILITY_PATH = '/fragments/nav/header-utility.plain.html';
+/** English URLs use /en/… but nav fragments may live at repo root; try both when fetching. */
+const EN_LOCALE_PREFIX = '/en';
 
 /**
  * Published `header.plain.html` on AEM sometimes omits the top utility row (Quick Order, etc.).
@@ -24,10 +26,19 @@ function shouldPrependUtilityBar(bodyDivs) {
 
 async function mergeUtilityBarIfNeeded(bodyDivs, localePrefix) {
   if (!shouldPrependUtilityBar(bodyDivs)) return bodyDivs;
-  const url = `${localePrefix}${HEADER_UTILITY_PATH}`;
-  const utilResp = await fetch(url);
-  if (!utilResp.ok) return bodyDivs;
-  const udoc = new DOMParser().parseFromString(await utilResp.text(), 'text/html');
+  const urls = localePrefix === EN_LOCALE_PREFIX
+    ? [`${localePrefix}${HEADER_UTILITY_PATH}`, HEADER_UTILITY_PATH]
+    : [`${localePrefix}${HEADER_UTILITY_PATH}`];
+  let html = '';
+  for (const url of urls) {
+    const utilResp = await fetch(url);
+    if (utilResp.ok) {
+      html = await utilResp.text();
+      break;
+    }
+  }
+  if (!html) return bodyDivs;
+  const udoc = new DOMParser().parseFromString(html, 'text/html');
   const utilityDivs = [...udoc.querySelectorAll(':scope > body > div')];
   if (!utilityDivs.length) return bodyDivs;
   return [...utilityDivs, ...bodyDivs];
@@ -73,6 +84,74 @@ function stripUtilityDuplicateNavTriggers(ul) {
   });
 }
 
+/** Locale select option values; navigation uses /en/, /fr/, /de/ for locale home. */
+const LOCALE_SELECT_ALLOWED = new Set(['/en', '/fr', '/de']);
+
+/** Legacy English path; longer prefixes first. /en is handled via locales. */
+const EN_PATH_PREFIXES = ['/en-us'];
+
+/**
+ * Strip the leading locale segment from a pathname using all configured locale keys.
+ * @param {string} pathname
+ * @param {string[]} localePrefixes longest-first
+ */
+function stripLocalePrefixFromPath(pathname, localePrefixes) {
+  const prefixed = localePrefixes.filter(Boolean).find((p) => {
+    if (pathname === p) return true;
+    return pathname.startsWith(`${p}/`);
+  });
+  if (prefixed) {
+    if (pathname === prefixed) return '/';
+    const rest = pathname.slice(prefixed.length);
+    return rest.length ? rest : '/';
+  }
+  for (const p of EN_PATH_PREFIXES) {
+    if (pathname === p) return '/';
+    if (pathname.startsWith(`${p}/`)) {
+      const rest = pathname.slice(p.length);
+      return rest.length ? rest : '/';
+    }
+  }
+  return pathname;
+}
+
+/**
+ * @param {string} stripped path without locale prefix, leading /
+ * @param {string} newPrefix e.g. '/en' or '/fr'
+ */
+function pathWithLocalePrefix(stripped, newPrefix) {
+  const path = stripped.startsWith('/') ? stripped : `/${stripped}`;
+  if (path === '/') return `${newPrefix}/`;
+  return `${newPrefix}${path}`;
+}
+
+/**
+ * Wire the language select: sync value, navigate on change.
+ * @param {ParentNode} root fragment or section containing `.header-locale-select`
+ */
+function decorateLocaleSelector(root) {
+  const select = root.querySelector('.header-locale-select');
+  if (!(select instanceof HTMLSelectElement)) return;
+
+  const { locales, locale } = getConfig();
+  const allPrefixes = Object.keys(locales).sort((a, b) => b.length - a.length);
+
+  let currentPrefix = locale.prefix;
+  if (!LOCALE_SELECT_ALLOWED.has(currentPrefix)) {
+    currentPrefix = '/en';
+  }
+  select.value = currentPrefix;
+
+  select.addEventListener('change', () => {
+    let next = select.value;
+    if (!LOCALE_SELECT_ALLOWED.has(next)) next = '/en';
+    const { pathname, search, hash } = window.location;
+    const stripped = stripLocalePrefixFromPath(pathname, allPrefixes);
+    const nextPath = pathWithLocalePrefix(stripped, next);
+    window.location.assign(`${nextPath}${search}${hash}`);
+  });
+}
+
 async function loadSvgIcons(container) {
   const icons = container.querySelectorAll('.icon');
   for (const icon of icons) {
@@ -91,6 +170,64 @@ async function loadSvgIcons(container) {
       } catch (e) { /* icon not found */ }
     }
   }
+}
+
+const LOCALE_SELECT_OPTIONS = [['/en', 'US | EN'], ['/fr', 'FR'], ['/de', 'DE']];
+
+/** Append globe + select to a header list when AEM fragment has no locale markup. */
+function injectLocaleSelectIntoUl(ul) {
+  if (ul.querySelector('.header-locale-select')) return;
+  const li = document.createElement('li');
+  li.className = 'header-locale-item';
+  const globe = document.createElement('span');
+  globe.className = 'icon icon-globe';
+  globe.setAttribute('aria-hidden', 'true');
+  const select = document.createElement('select');
+  select.className = 'header-locale-select';
+  select.setAttribute('name', 'locale');
+  select.setAttribute('aria-label', 'Language and region');
+  select.setAttribute('title', 'Language and region');
+  LOCALE_SELECT_OPTIONS.forEach(([value, label]) => {
+    const o = document.createElement('option');
+    o.value = value;
+    o.textContent = label;
+    select.append(o);
+  });
+  li.append(globe, select);
+  ul.append(li);
+}
+
+/**
+ * Ensure a locale dropdown exists (AEM may serve older header HTML), then wire it.
+ * @param {HTMLElement} fragment
+ * @param {HTMLElement | undefined} topnavSection
+ * @param {HTMLElement | undefined} brandSection
+ */
+async function ensureHeaderLocale(fragment, topnavSection, brandSection) {
+  if (!fragment.querySelector('.header-locale-select')) {
+    const byUtilityText = [...fragment.querySelectorAll(':scope > .section')].find((s) => /quick\s*order|order\s*status|help\s*center/i.test(s.textContent));
+    const utilityUl = topnavSection?.querySelector('ul')
+      || byUtilityText?.querySelector('ul');
+    const actionsUl = brandSection?.querySelector('.header-actions-bar ul');
+    const targetUl = utilityUl || actionsUl;
+    if (targetUl) {
+      injectLocaleSelectIntoUl(targetUl);
+    }
+  }
+
+  const select = fragment.querySelector('.header-locale-select');
+  if (!select) return;
+
+  const hostSection = select.closest('.section');
+  if (hostSection && (hostSection === topnavSection || /quick\s*order|order\s*status|help\s*center/i.test(hostSection.textContent))) {
+    hostSection.classList.add('topnav-section', 'global-utility-nav');
+  }
+
+  const localeRow = fragment.querySelector('.header-locale-item');
+  if (localeRow) {
+    await loadSvgIcons(localeRow);
+  }
+  decorateLocaleSelector(fragment);
 }
 
 function buildSlideOutNav(navSection) {
@@ -261,17 +398,28 @@ async function decorateHeader(fragment) {
       brandContent.prepend(hamburgerBtn);
     }
   }
+
+  await ensureHeaderLocale(fragment, topnavSection, brandSection);
 }
 
 export default async function init(el) {
   const headerMeta = getMetadata('header');
   const path = headerMeta || HEADER_PATH;
   const { locale } = getConfig();
+  const plainUrls = locale.prefix === EN_LOCALE_PREFIX
+    ? [`${locale.prefix}${path}.plain.html`, `${path}.plain.html`]
+    : [`${locale.prefix}${path}.plain.html`];
   try {
     let fragment;
-    const plainResp = await fetch(`${locale.prefix}${path}.plain.html`);
-    if (plainResp.ok) {
-      const html = await plainResp.text();
+    let html = '';
+    for (const url of plainUrls) {
+      const plainResp = await fetch(url);
+      if (plainResp.ok) {
+        html = await plainResp.text();
+        break;
+      }
+    }
+    if (html) {
       const doc = new DOMParser().parseFromString(html, 'text/html');
       let pageSections = [...doc.querySelectorAll(':scope > body > div')];
       pageSections = await mergeUtilityBarIfNeeded(pageSections, locale.prefix);
@@ -280,7 +428,21 @@ export default async function init(el) {
       fragment.append(...pageSections);
       await loadArea({ area: fragment });
     } else {
-      fragment = await loadFragment(`${locale.prefix}${path}`);
+      const fragPaths = locale.prefix === EN_LOCALE_PREFIX
+        ? [`${locale.prefix}${path}`, path]
+        : [`${locale.prefix}${path}`];
+      let loadError;
+      fragment = undefined;
+      for (const p of fragPaths) {
+        try {
+          fragment = await loadFragment(p);
+          loadError = undefined;
+          break;
+        } catch (e) {
+          loadError = e;
+        }
+      }
+      if (fragment === undefined) throw Error(loadError);
     }
     fragment.classList.add('header-content');
     await decorateHeader(fragment);

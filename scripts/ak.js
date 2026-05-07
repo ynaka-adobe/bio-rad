@@ -20,10 +20,21 @@ export function getMetadata(name) {
 
 export function getLocale(locales = { '': {} }) {
   const { pathname } = window.location;
-  const matches = Object.keys(locales).filter((locale) => pathname.startsWith(`${locale}/`));
-  const prefix = getMetadata('locale') || matches.sort((a, b) => b.length - a.length)?.[0] || '';
-  if (locales[prefix].lang) document.documentElement.lang = locales[prefix].lang;
-  return { prefix, ...locales[prefix] };
+  const matches = Object.keys(locales).filter((locale) => {
+    if (!locale) return false;
+    return pathname === locale || pathname.startsWith(`${locale}/`);
+  });
+  const fromPath = matches.sort((a, b) => b.length - a.length)[0] || '';
+  let prefix = getMetadata('locale') || fromPath;
+  if (!locales[prefix]) {
+    prefix = fromPath;
+  }
+  if (!locales[prefix]) {
+    prefix = '';
+  }
+  const bundle = locales[prefix];
+  if (bundle?.lang) document.documentElement.lang = bundle.lang;
+  return { prefix, ...bundle };
 }
 
 export const [setConfig, getConfig] = (() => {

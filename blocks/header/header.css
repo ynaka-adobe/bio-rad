@@ -34,6 +34,47 @@ header {
     color: var(--color-text-primary, #222);
   }
 
+  /* Language selector (top utility bar or brand actions row) */
+  .header-locale-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .header-locale-select {
+    margin: 0;
+    padding: 4px 28px 4px 8px;
+    border: 1px solid var(--color-border, #dadada);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--color-text-primary, #222);
+    background-color: #fff;
+    cursor: pointer;
+    min-width: 5.5rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+  }
+
+  .header-locale-select:focus {
+    outline: 2px solid var(--color-brand-green, #008943);
+    outline-offset: 1px;
+  }
+
+  .header-locale-item .icon {
+    margin-right: 0;
+  }
+
+  .header-locale-item .icon,
+  .header-locale-item .icon svg {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
+
   /* ===== TOP UTILITY BAR (Quick Order, Order Status, Help, locale) ===== */
   .topnav-section,
   .global-utility-nav {
