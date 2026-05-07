@@ -1,6 +1,11 @@
 import { getConfig, getMetadata, loadArea, setConfig } from './ak.js';
 import { runExperimentation } from './experiment-loader.js';
 
+/** AEM Universal Editor iframe loads this origin; skip Target so at.js does not fight UE/CSP. */
+const isUePreviewHost = (hostname = window.location.hostname) => (
+  /\.(?:stage-ue|ue)\.da\.live$/.test(hostname)
+);
+
 /** Suffixes for internal link decoration (see decorateLink in ak.js). */
 const hostnames = ['aem.page', 'aem.live', 'ynaka-adobe.aem.page', 'ynaka-adobe.aem.live'];
 
@@ -48,6 +53,7 @@ const decorateArea = ({ area = document }) => {
 };
 
 async function loadTarget() {
+  if (isUePreviewHost()) return;
   const targetMeta = getMetadata('target');
   if (!targetMeta) return;
 
@@ -95,6 +101,7 @@ async function loadTarget() {
  * @see https://experienceleague.adobe.com/en/docs/target-dev/developer/client-side/at-js-implementation/functions-overview/adobe-target-applyoffer
  */
 async function applyTargetHeroMboxIfConfigured() {
+  if (isUePreviewHost()) return;
   const mbox = getMetadata('target-mbox-hero')?.trim();
   if (!mbox) return;
 
@@ -130,7 +137,7 @@ export async function loadPage() {
 }
 
 const codeBase = new URL(import.meta.url).href.replace(/\/scripts\/scripts\.js$/, '');
-if (/\.(?:stage-ue|ue)\.da\.live$/.test(window.location.hostname)) {
+if (isUePreviewHost()) {
   await import(`${codeBase}/ue/scripts/ue.js`).then(({ default: ue }) => ue());
 }
 

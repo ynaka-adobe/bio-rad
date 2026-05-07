@@ -6,28 +6,15 @@ const getRedirect = (resp, savedSearch) => {
   }
 };
 
+/**
+ * Pass schedule JSON through unchanged. Time-window selection belongs in
+ * blocks/schedule/schedule.js (URL `start`, localStorage, etc.). Filtering here
+ * with Date.now() removed future rows before the client could simulate dates.
+ */
 const formatSchedule = async (response) => {
   const schedule2Response = (json) => new Response(JSON.stringify(json), response);
-
   const json = await response.json();
-  if (!json.data?.[0]?.fragment) return schedule2Response(json);
-
-  const data = [];
-  for (const [idx, schedule] of json.data.entries()) {
-    const { start, end } = schedule;
-
-    // Presumably the default fragment
-    if (!start && !end) {
-      data.push(json.data[idx]);
-    } else {
-      const now = Date.now();
-      const startDate = new Date(start);
-      const endDate = new Date(end);
-      if (startDate < now && endDate > now) data.push(json.data[idx]);
-    }
-  }
-
-  return schedule2Response({ ...json, data });
+  return schedule2Response(json);
 };
 
 export const fetchFromAem = async ({ request, cache, savedSearch }) => {

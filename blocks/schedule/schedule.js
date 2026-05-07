@@ -143,7 +143,9 @@ export default async function init(a) {
     try {
       const start = Date.parse(evt.start);
       const end = Date.parse(evt.end);
-      return referenceTime > start && referenceTime < end;
+      if (Number.isNaN(start) || Number.isNaN(end)) return false;
+      /* Half-open [start, end): include row start (matches ?start= same calendar day as evt.start). */
+      return referenceTime >= start && referenceTime < end;
     } catch {
       config.log(`Could not get scheduled event: ${evt.name}`);
       return false;
