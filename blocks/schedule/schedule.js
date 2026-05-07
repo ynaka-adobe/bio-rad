@@ -127,7 +127,9 @@ function getScheduleReferenceTime(params = new URL(window.location.href).searchP
 }
 
 export default async function init(a) {
-  const resp = await fetch(a.href);
+  const url = a.href;
+  a.innerHTML = '';
+  const resp = await fetch(url);
   if (!resp.ok) {
     await removeSchedule(a);
     return;
