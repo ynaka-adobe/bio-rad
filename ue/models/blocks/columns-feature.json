@@ -58,7 +58,9 @@
       "id": "columns-feature",
       "components": [
         "text",
-        "image"
+        "image",
+        "title",
+        "button"
       ]
     }
   ]

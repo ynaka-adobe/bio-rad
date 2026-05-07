@@ -16,6 +16,25 @@
           }
         },
         {
+          "title": "Title",
+          "id": "title",
+          "model": "title",
+          "plugins": {
+            "da": {
+              "name": "title",
+              "type": "title"
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/title/v1/title",
+                "template": {
+                  "model": "title"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Image",
           "id": "image",
           "model": "image",
@@ -33,6 +52,25 @@
                   "selector": "img[alt]"
                 }
               ]
+            }
+          }
+        },
+        {
+          "title": "Button",
+          "id": "button",
+          "model": "button",
+          "plugins": {
+            "da": {
+              "name": "button",
+              "type": "button"
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/button/v1/button",
+                "template": {
+                  "model": "button"
+                }
+              }
             }
           }
         }
@@ -92,6 +130,15 @@
                   "selector": "div:nth-child(1)"
                 }
               ]
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Card",
+                  "model": "card"
+                }
+              }
             }
           }
         },

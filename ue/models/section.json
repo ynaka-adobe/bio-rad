@@ -35,7 +35,9 @@
       "id": "section",
       "components": [
         "text",
+        "title",
         "image",
+        "button",
         "hero",
         "columns",
         "columns-feature",

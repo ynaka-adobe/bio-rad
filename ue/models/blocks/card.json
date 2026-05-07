@@ -15,6 +15,15 @@
               "selector": "div:nth-child(1)"
             }
           ]
+        },
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Card",
+              "model": "card"
+            }
+          }
         }
       }
     }

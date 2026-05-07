@@ -58,7 +58,9 @@
       "id": "columns-product",
       "components": [
         "text",
-        "image"
+        "image",
+        "title",
+        "button"
       ]
     }
   ]

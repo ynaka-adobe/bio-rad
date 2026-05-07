@@ -9,7 +9,9 @@
     "id": "section",
     "components": [
       "text",
+      "title",
       "image",
+      "button",
       "hero",
       "columns",
       "columns-feature",
@@ -51,14 +53,18 @@
     "id": "columns-feature",
     "components": [
       "text",
-      "image"
+      "image",
+      "title",
+      "button"
     ]
   },
   {
     "id": "columns-product",
     "components": [
       "text",
-      "image"
+      "image",
+      "title",
+      "button"
     ]
   },
   {
@@ -69,13 +75,17 @@
   },
   {
     "id": "columns-row",
-    "components": []
+    "components": [
+      "columns-cell"
+    ]
   },
   {
     "id": "columns-cell",
     "components": [
       "text",
-      "image"
+      "image",
+      "title",
+      "button"
     ]
   },
   {
