@@ -3,7 +3,30 @@
     {
       "title": "Site search",
       "id": "site-search",
+      "model": "site-search",
       "plugins": {
+        "da": {
+          "name": "site-search",
+          "unsafeHTML": "<div><div><h2></h2></div></div><div><div><p><a href=\"/query-index.json\"></a></p></div></div><div><div><p>Search…</p></div></div>",
+          "fields": [
+            {
+              "name": "title",
+              "selector": "div:nth-child(1) h2"
+            },
+            {
+              "name": "titleType",
+              "selector": "div:nth-child(1) h2"
+            },
+            {
+              "name": "link",
+              "selector": "div:nth-child(2) a[href]"
+            },
+            {
+              "name": "placeholder",
+              "selector": "div:nth-child(3) p"
+            }
+          ]
+        },
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block",

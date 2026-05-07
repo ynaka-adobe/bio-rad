@@ -1,0 +1,65 @@
+{
+  "definitions": [
+    {
+      "title": "Columns Feature",
+      "id": "columns-feature",
+      "model": "columns-feature",
+      "filter": "columns-feature",
+      "plugins": {
+        "da": {
+          "name": "columns-feature",
+          "rows": 1,
+          "columns": 2,
+          "behaviour": "columns"
+        },
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/columns/v1/columns",
+            "template": {
+              "columns": "2",
+              "rows": "1"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "columns-feature",
+      "fields": [
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "columns",
+          "value": "",
+          "label": "Columns",
+          "validation": {
+            "numberMin": 1,
+            "numberMax": 12
+          }
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "rows",
+          "value": "",
+          "label": "Rows",
+          "validation": {
+            "numberMin": 1,
+            "numberMax": 12
+          }
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "columns-feature",
+      "components": [
+        "text",
+        "image"
+      ]
+    }
+  ]
+}

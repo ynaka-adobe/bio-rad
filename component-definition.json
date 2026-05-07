@@ -96,6 +96,136 @@
           }
         },
         {
+          "title": "Cards Category",
+          "id": "cards-category",
+          "model": "cards-category",
+          "filter": "cards-category",
+          "plugins": {
+            "da": {
+              "name": "cards-category",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div:nth-child(1)"
+                }
+              ]
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Cards Category",
+                  "filter": "cards-category"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Cards News",
+          "id": "cards-news",
+          "model": "cards-news",
+          "filter": "cards-news",
+          "plugins": {
+            "da": {
+              "name": "cards-news",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div:nth-child(1)"
+                }
+              ]
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Cards News",
+                  "filter": "cards-news"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Cards Promo",
+          "id": "cards-promo",
+          "model": "cards-promo",
+          "filter": "cards-promo",
+          "plugins": {
+            "da": {
+              "name": "cards-promo",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div:nth-child(1)"
+                }
+              ]
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Cards Promo",
+                  "filter": "cards-promo"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Columns Feature",
+          "id": "columns-feature",
+          "model": "columns-feature",
+          "filter": "columns-feature",
+          "plugins": {
+            "da": {
+              "name": "columns-feature",
+              "rows": 1,
+              "columns": 2,
+              "behaviour": "columns"
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/columns/v1/columns",
+                "template": {
+                  "columns": "2",
+                  "rows": "1"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Columns Product",
+          "id": "columns-product",
+          "model": "columns-product",
+          "filter": "columns-product",
+          "plugins": {
+            "da": {
+              "name": "columns-product",
+              "rows": 1,
+              "columns": 2,
+              "behaviour": "columns"
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/columns/v1/columns",
+                "template": {
+                  "columns": "2",
+                  "rows": "1"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Columns",
           "id": "columns",
           "model": "columns",
@@ -269,7 +399,30 @@
         {
           "title": "Site search",
           "id": "site-search",
+          "model": "site-search",
           "plugins": {
+            "da": {
+              "name": "site-search",
+              "unsafeHTML": "<div><div><h2></h2></div></div><div><div><p><a href=\"/query-index.json\"></a></p></div></div><div><div><p>Search…</p></div></div>",
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div:nth-child(1) h2"
+                },
+                {
+                  "name": "titleType",
+                  "selector": "div:nth-child(1) h2"
+                },
+                {
+                  "name": "link",
+                  "selector": "div:nth-child(2) a[href]"
+                },
+                {
+                  "name": "placeholder",
+                  "selector": "div:nth-child(3) p"
+                }
+              ]
+            },
             "xwalk": {
               "page": {
                 "resourceType": "core/franklin/components/block/v1/block",

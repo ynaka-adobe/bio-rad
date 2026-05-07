@@ -38,6 +38,8 @@
         "image",
         "hero",
         "columns",
+        "columns-feature",
+        "columns-product",
         "fragment",
         "table",
         "youtube",
@@ -45,6 +47,9 @@
         "footer",
         "header",
         "advanced-tabs",
+        "cards-news",
+        "cards-promo",
+        "cards-category",
         "section-metadata",
         "schedule",
         "site-search"

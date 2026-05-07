@@ -1,0 +1,65 @@
+{
+  "definitions": [
+    {
+      "title": "Columns Product",
+      "id": "columns-product",
+      "model": "columns-product",
+      "filter": "columns-product",
+      "plugins": {
+        "da": {
+          "name": "columns-product",
+          "rows": 1,
+          "columns": 2,
+          "behaviour": "columns"
+        },
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/columns/v1/columns",
+            "template": {
+              "columns": "2",
+              "rows": "1"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "columns-product",
+      "fields": [
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "columns",
+          "value": "",
+          "label": "Columns",
+          "validation": {
+            "numberMin": 1,
+            "numberMax": 12
+          }
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "rows",
+          "value": "",
+          "label": "Rows",
+          "validation": {
+            "numberMin": 1,
+            "numberMax": 12
+          }
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "columns-product",
+      "components": [
+        "text",
+        "image"
+      ]
+    }
+  ]
+}

@@ -12,6 +12,8 @@
       "image",
       "hero",
       "columns",
+      "columns-feature",
+      "columns-product",
       "fragment",
       "table",
       "youtube",
@@ -19,9 +21,44 @@
       "footer",
       "header",
       "advanced-tabs",
+      "cards-news",
+      "cards-promo",
+      "cards-category",
       "section-metadata",
       "schedule",
       "site-search"
+    ]
+  },
+  {
+    "id": "cards-category",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "cards-news",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "cards-promo",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "columns-feature",
+    "components": [
+      "text",
+      "image"
+    ]
+  },
+  {
+    "id": "columns-product",
+    "components": [
+      "text",
+      "image"
     ]
   },
   {

@@ -80,6 +80,96 @@
     ]
   },
   {
+    "id": "cards-category",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Block label",
+        "value": "",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "cards-news",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Block label",
+        "value": "",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "cards-promo",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Block label",
+        "value": "",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "columns-feature",
+    "fields": [
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "columns",
+        "value": "",
+        "label": "Columns",
+        "validation": {
+          "numberMin": 1,
+          "numberMax": 12
+        }
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "rows",
+        "value": "",
+        "label": "Rows",
+        "validation": {
+          "numberMin": 1,
+          "numberMax": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "columns-product",
+    "fields": [
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "columns",
+        "value": "",
+        "label": "Columns",
+        "validation": {
+          "numberMin": 1,
+          "numberMax": 12
+        }
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "rows",
+        "value": "",
+        "label": "Rows",
+        "validation": {
+          "numberMin": 1,
+          "numberMax": 12
+        }
+      }
+    ]
+  },
+  {
     "id": "columns",
     "fields": [
       {
