@@ -392,20 +392,29 @@ header {
     }
   }
 
-  .nav-panel-item {
+  a.nav-panel-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
+    width: 100%;
     padding: 20px 24px;
     font-size: 18px;
     font-weight: 300;
     color: var(--color-text-primary, #222);
+    text-decoration: none;
     cursor: pointer;
     transition: background-color 0.15s ease;
   }
 
-  .nav-panel-item:hover {
+  a.nav-panel-item:hover {
     background-color: #f9f9f9;
+  }
+
+  .nav-panel-item-label {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
   }
 
   .nav-panel-chevron svg {

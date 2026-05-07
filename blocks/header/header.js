@@ -97,6 +97,15 @@ function buildSlideOutNav(navSection) {
   const panel = document.createElement('div');
   panel.className = 'nav-panel';
 
+  const overlay = document.createElement('div');
+  overlay.className = 'nav-overlay';
+
+  const close = () => {
+    panel.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  };
+
   // Header row: "Main Menu" + close button
   const panelHeader = document.createElement('div');
   panelHeader.className = 'nav-panel-header';
@@ -109,47 +118,38 @@ function buildSlideOutNav(navSection) {
   closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
   panelHeader.append(title, closeBtn);
   panel.append(panelHeader);
+  closeBtn.addEventListener('click', close);
 
-  // Nav items from the nav section
+  // Nav items: use <a> rows so hrefs work (older markup used divs and dropped links)
   const navList = navSection.querySelector('ul');
   if (navList) {
     const clonedList = navList.cloneNode(true);
     clonedList.className = 'nav-panel-list';
-    // Add chevron arrows to items that have dropdowns
     clonedList.querySelectorAll(':scope > li').forEach((li) => {
       const link = li.querySelector('a');
-      if (link) {
-        const item = document.createElement('div');
-        item.className = 'nav-panel-item';
-        const label = document.createElement('span');
-        label.textContent = link.textContent.trim();
-        item.append(label);
-        // Add chevron for items with sub-menus (all except Services)
-        const hasSubmenu = li.querySelector('ul');
-        if (hasSubmenu) {
-          const chevron = document.createElement('span');
-          chevron.className = 'nav-panel-chevron';
-          chevron.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
-          item.append(chevron);
-        }
-        li.innerHTML = '';
-        li.append(item);
+      if (!link) return;
+      const hasSubmenu = Boolean(li.querySelector(':scope > ul'));
+      const row = document.createElement('a');
+      row.className = 'nav-panel-item';
+      row.href = link.href;
+      const label = document.createElement('span');
+      label.className = 'nav-panel-item-label';
+      label.textContent = link.textContent.replace(/\s+/g, ' ').trim();
+      row.append(label);
+      if (hasSubmenu) {
+        const chevron = document.createElement('span');
+        chevron.className = 'nav-panel-chevron';
+        chevron.setAttribute('aria-hidden', 'true');
+        chevron.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+        row.append(chevron);
       }
+      row.addEventListener('click', close);
+      li.innerHTML = '';
+      li.append(row);
     });
     panel.append(clonedList);
   }
 
-  // Overlay
-  const overlay = document.createElement('div');
-  overlay.className = 'nav-overlay';
-
-  // Close handlers
-  const close = () => {
-    panel.classList.remove('is-open');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  };
-  closeBtn.addEventListener('click', close);
   overlay.addEventListener('click', close);
 
   return { panel, overlay };
