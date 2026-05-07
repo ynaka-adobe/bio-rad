@@ -13,6 +13,12 @@ async function removeSchedule(a, e) {
   config.log(`Could not load: ${a.href}`);
 }
 
+/** When the schedule <a> was removed before fetch, prod removeSchedule is a no-op; drop the wrapper. */
+function cleanupDetachedSchedule(a, elToReplace) {
+  if (a.isConnected || !elToReplace.isConnected) return;
+  elToReplace.remove();
+}
+
 async function loadLocalizedEvent(event) {
   const url = new URL(event.fragment);
   const localized = localizeUrl({ config, url });
@@ -51,10 +57,11 @@ function getReplaceEl(a) {
   return current;
 }
 
-async function loadEvent(a, event, defEvent) {
+async function loadEvent(a, event, defEvent, elToReplace) {
   // If no fragment path on purpose, remove the schedule.
   if (!event.fragment) {
-    a.remove();
+    if (a.isConnected) a.remove();
+    else cleanupDetachedSchedule(a, elToReplace);
     return;
   }
 
@@ -64,9 +71,9 @@ async function loadEvent(a, event, defEvent) {
   // If still no fragment, remove the schedule link
   if (!fragment) {
     removeSchedule(a);
+    cleanupDetachedSchedule(a, elToReplace);
     return;
   }
-  const elToReplace = getReplaceEl(a);
   const sections = fragment.querySelectorAll(':scope > .section');
   const children = sections.length === 1
     ? fragment.querySelectorAll(':scope > *')
@@ -128,10 +135,18 @@ function getScheduleReferenceTime(params = new URL(window.location.href).searchP
 
 export default async function init(a) {
   const url = a.href;
-  a.innerHTML = '';
+  const elToReplace = getReplaceEl(a);
+  /* Drop the schedule <a> before any await so autoblock text never re-appears; keep the
+   * node when it is the insertion anchor (see getReplaceEl). */
+  if (elToReplace === a) {
+    a.innerHTML = '';
+  } else {
+    a.replaceWith();
+  }
   const resp = await fetch(url);
   if (!resp.ok) {
     await removeSchedule(a);
+    cleanupDetachedSchedule(a, elToReplace);
     return;
   }
   const { data } = await resp.json();
@@ -161,8 +176,9 @@ export default async function init(a) {
   const event = found || defEvent;
   if (!event) {
     await removeSchedule(a);
+    cleanupDetachedSchedule(a, elToReplace);
     return;
   }
 
-  await loadEvent(a, event, defEvent);
+  await loadEvent(a, event, defEvent, elToReplace);
 }
