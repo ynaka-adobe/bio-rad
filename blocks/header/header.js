@@ -153,13 +153,14 @@ function decorateLocaleSelector(root) {
 }
 
 async function loadSvgIcons(container) {
+  const { codeBase } = getConfig();
   const icons = container.querySelectorAll('.icon');
   for (const icon of icons) {
     const classList = Array.from(icon.classList);
     const iconName = classList.find((c) => c.startsWith('icon-') && c !== 'icon')?.replace('icon-', '');
     if (iconName) {
       try {
-        const resp = await fetch(`/icons/${iconName}.svg`);
+        const resp = await fetch(`${codeBase}/img/icons/${iconName}.svg`);
         if (resp.ok) {
           const svg = await resp.text();
           const span = document.createElement('span');
