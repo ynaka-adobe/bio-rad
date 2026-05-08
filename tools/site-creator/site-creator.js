@@ -5,24 +5,24 @@ const $ = (sel, root = document) => root.querySelector(sel);
 
 const TEMPLATES = [
   {
-    title: 'CAT Dealer Digital Experience Platform',
-    description: 'Use Cat provided templates.',
-    url: 'https://github.com/ynaka-adobe/cat',
+    title: 'Bio-Rad Laboratories Digital Experience Platform',
+    description: 'Use Bio-Rad provided templates.',
+    url: 'https://github.com/ynaka-adobe/Bio-Rad',
   },
   {
-    title: 'CAT Dealer Digital Experience w/ Personalization',
-    description: 'Create your own Cat provided Repo to enable custom block creation and personalization.',
-    url: 'https://github.com/ynaka-adobe/cat-dealer',
+    title: 'Bio-Rad Digital Experience w/ Personalization',
+    description: 'Create your own Bio-Rad provided Repo to enable custom block creation and personalization.',
+    url: 'https://github.com/ynaka-adobe/Bio-Rad',
   },
   {
-    title: 'CAT Dealer Kit for Platform',
-    description: 'Hooks to subscribe to CAT content.',
-    url: 'https://github.com/aemsites/author-kit',
+    title: 'Bio-Rad for Platform',
+    description: 'Hooks to subscribe to Bio-Rad content.',
+    url: 'https://github.com/aemsites/Bio-Rad-kit',
   },
 ];
 
 const CODE_SYNC_HREF = 'https://da.live/bot';
-const DEFAULT_PRESET_CODEBASE_URL = 'https://github.com/cat-org/cat-dxp';
+const DEFAULT_PRESET_CODEBASE_URL = 'https://github.com/bio-rad-org/bio-rad-dxp';
 const CUSTOM_CODEBASE_SELECT_VALUE = '__custom__';
 
 /** Outside DA, DA_SDK may never resolve; avoid hanging a hidden page forever. */
@@ -150,7 +150,7 @@ function renderMain({
             </div>
           </div>
           <p class="sc-hint">
-            Choose the Cat DXP codebase or your own GitHub repo. You can also pick a starter template below to fill a custom URL.
+            Choose the Bio-Rad DXP codebase or your own GitHub repo. You can also pick a starter template below to fill a custom URL.
           </p>
         </div>
 
