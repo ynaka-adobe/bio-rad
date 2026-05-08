@@ -115,14 +115,14 @@ function renderMain({
               type="text"
               name="dealerName"
               autocomplete="organization"
-              placeholder="e.g. Acme Cat"
+              placeholder="e.g. Bio-Rad"
               value="${escapeAttr(dealerName)}"
             />
           </div>
         </div>
 
         <div class="sc-block ${step1Hidden}">
-          <label class="sc-label" for="sc-codebase-preset">Caterpillar Code options</label>
+          <label class="sc-label" for="sc-codebase-preset">Bio-Rad Code options</label>
           <div class="sc-input-row">
             <select id="sc-codebase-preset" class="sc-select" name="codebase-preset" aria-controls="sc-custom-repo-wrap">
               <option
