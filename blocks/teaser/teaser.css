@@ -1,0 +1,131 @@
+/* Teaser block - WKND style: text left with yellow accent, image right */
+
+.section:has(.teaser) {
+  padding: 0;
+}
+
+.teaser {
+  background-color: #f7f7f7;
+}
+
+.teaser-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+/* Text side */
+.teaser-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 32px;
+  gap: 16px;
+}
+
+/* Eyebrow heading with yellow underline */
+.teaser-text h2,
+.teaser-text h3 {
+  font-family: "Source Serif Pro", Georgia, serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.25;
+  letter-spacing: 0.72px;
+  color: #202020;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.teaser-text h2::after,
+.teaser-text h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: 8px;
+  background-color: #ffe900;
+  z-index: -1;
+}
+
+/* Subtitle */
+.teaser-text h4,
+.teaser-text h5 {
+  font-family: "Source Serif Pro", Georgia, serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.5;
+  letter-spacing: 0.48px;
+  color: #202020;
+  margin: 0;
+}
+
+/* Description */
+.teaser-text p {
+  font-family: "Source Sans Pro", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 28px;
+  color: #202020;
+  margin: 0;
+  max-width: 480px;
+}
+
+/* CTA button - yellow */
+.teaser-text a {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #ffe900;
+  color: #202020;
+  font-family: "Source Sans Pro", "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  border-radius: 0;
+  margin-top: 16px;
+  width: fit-content;
+  transition: background-color 0.2s ease;
+}
+
+.teaser-text a:hover {
+  background-color: #e6d200;
+  color: #202020;
+  text-decoration: none;
+}
+
+/* Image side */
+.teaser-image {
+  flex: 1;
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.teaser-image picture,
+.teaser-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Desktop: side-by-side layout */
+@media (width >= 900px) {
+  .teaser-inner {
+    flex-direction: row;
+    min-height: 560px;
+  }
+
+  .teaser-text {
+    flex: 0 0 40%;
+    padding: 64px 48px;
+  }
+
+  .teaser-image {
+    flex: 1;
+    min-height: unset;
+  }
+}
