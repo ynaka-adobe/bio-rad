@@ -1,0 +1,85 @@
+/* WKND-style pull quote: dominant quotation, decorative quotes, attributed cite */
+
+.quote {
+  box-sizing: border-box;
+  padding: var(--spacing-xl) var(--spacing-l);
+  color: var(--color-text-primary);
+}
+
+@media (width >= 900px) {
+  .quote {
+    padding: var(--spacing-xxl) var(--spacing-xl);
+  }
+}
+
+.quote blockquote {
+  margin: 0 auto;
+  padding: 0;
+  max-width: 900px;
+}
+
+.quote blockquote .quote-quotation {
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-s);
+  font-style: italic;
+  font-weight: 400;
+  line-height: var(--heading-line-height);
+}
+
+@media (width >= 900px) {
+  .quote blockquote .quote-quotation {
+    font-size: var(--heading-font-size-m);
+  }
+}
+
+.quote blockquote .quote-quotation > :first-child {
+  text-indent: -0.5ch;
+}
+
+.quote blockquote .quote-quotation > :first-child::before,
+.quote blockquote .quote-quotation > :last-child::after {
+  line-height: 0;
+}
+
+.quote blockquote .quote-quotation > :first-child::before {
+  content: "\201C";
+}
+
+.quote blockquote .quote-quotation > :last-child::after {
+  content: "\201D";
+}
+
+.quote blockquote .quote-attribution {
+  margin-top: var(--spacing-l);
+  text-align: right;
+  font-size: var(--body-font-size-m);
+  color: var(--color-text-secondary);
+  font-style: normal;
+}
+
+.quote blockquote .quote-attribution > :first-child::before {
+  content: "\2014";
+  padding-right: 0.5ch;
+}
+
+/* Inverted / dark panel variant (WKND quote dark) */
+.quote.dark,
+.quote-dark {
+  border: 1px solid var(--color-black);
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.quote.dark blockquote .quote-quotation,
+.quote.dark blockquote .quote-attribution,
+.quote.dark blockquote cite,
+.quote-dark blockquote .quote-quotation,
+.quote-dark blockquote .quote-attribution,
+.quote-dark blockquote cite {
+  color: var(--color-white);
+}
+
+.quote.dark blockquote .quote-attribution,
+.quote-dark blockquote .quote-attribution {
+  color: rgb(255 255 255 / 85%);
+}

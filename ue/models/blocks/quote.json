@@ -1,0 +1,57 @@
+{
+  "definitions": [
+    {
+      "title": "Quote",
+      "id": "quote",
+      "model": "quote",
+      "plugins": {
+        "da": {
+          "name": "quote",
+          "unsafeHTML": "<div><div></div></div><div><div></div></div>",
+          "fields": [
+            {
+              "name": "quotation",
+              "selector": "div:first-child>div"
+            },
+            {
+              "name": "attribution",
+              "selector": "div:last-child>div"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "quote",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "quotation",
+          "label": "Quotation",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "name": "attribution",
+          "label": "Attribution",
+          "valueType": "string"
+        },
+        {
+          "component": "multiselect",
+          "name": "classes",
+          "label": "Style",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Dark panel",
+              "value": "dark"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

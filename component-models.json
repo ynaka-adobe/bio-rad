@@ -396,6 +396,35 @@
     ]
   },
   {
+    "id": "quote",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "quotation",
+        "label": "Quotation",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "attribution",
+        "label": "Attribution",
+        "valueType": "string"
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Style",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Dark panel",
+            "value": "dark"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "schedule",
     "fields": [
       {

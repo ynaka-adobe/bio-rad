@@ -52,7 +52,12 @@ const decorateArea = ({ area = document }) => {
   eagerLoad(area, 'img');
 };
 
-async function loadTarget() {
+/**
+ * Load at.js early so other code can rely on window.adobe.target, but do not apply
+ * page-load offers until after blocks run — e.g. target-offer creates `.target-offer__slot`
+ * in its init; VEC selectors often point at that hook.
+ */
+async function ensureTargetAtJs() {
   if (isUePreviewHost()) return;
   const targetMeta = getMetadata('target');
   if (!targetMeta) return;
@@ -67,13 +72,27 @@ async function loadTarget() {
 
   try {
     await import('../deps/at/at.js');
+  } catch (e) {
+    getConfig().log(e, document.body);
+  }
+}
+
+async function applyTargetPageLoad() {
+  if (isUePreviewHost()) return;
+  const targetMeta = getMetadata('target');
+  if (!targetMeta) return;
+
+  const t = window.adobe?.target;
+  if (!t?.getOffers) return;
+
+  try {
     const pageLoadRequest = { execute: { pageLoad: {} } };
-    const offers = await window.adobe.target.getOffers({
+    const offers = await t.getOffers({
       request: pageLoadRequest,
     });
 
-    if (typeof window.adobe.target.applyOffers === 'function') {
-      await window.adobe.target.applyOffers({
+    if (typeof t.applyOffers === 'function') {
+      await t.applyOffers({
         request: pageLoadRequest,
         response: offers,
       });
@@ -130,9 +149,10 @@ async function applyTargetHeroMboxIfConfigured() {
 
 export async function loadPage() {
   setConfig({ hostnames, locales, linkBlocks, components, decorateArea });
-  await loadTarget();
+  await ensureTargetAtJs();
   await runExperimentation(document, experimentationConfig);
   await loadArea();
+  await applyTargetPageLoad();
   await applyTargetHeroMboxIfConfigured();
 }
 

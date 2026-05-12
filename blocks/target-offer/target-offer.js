@@ -3,7 +3,7 @@ import { getConfig, getMetadata, loadArea } from '../../scripts/ak.js';
 /**
  * Adobe Target HTML offer slot.
  * - VEC / page-load: point activities at `.target-offer` or `[data-mbox-name="…"]`
- *   (see scripts.js loadTarget when `<meta name="target">` is set).
+ *   (see scripts.js applyTargetPageLoad after blocks load when `<meta name="target">` is set).
  * - Optional: first table row with a single cell = mbox name triggers a post-init
  *   getOffers request when real at.js is wired (deps/at/at.js).
  */
@@ -27,7 +27,7 @@ function collectMboxFromFirstRow(rows) {
 
 /** @param {HTMLElement} el */
 function buildSlot(el) {
-  const mboxPara = el.querySelector(':scope > p.target-offer-mbox');
+  const mboxPara = el.querySelector('p.target-offer-mbox');
   let mboxName = '';
   const slot = document.createElement('div');
   slot.className = 'target-offer__slot';

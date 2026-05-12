@@ -72,8 +72,13 @@ export async function loadBlock(block) {
   const { codeBase, log, components } = getConfig();
   const { classList } = block;
   const name = classList[0];
+  /** When the doc class is a variant slug (e.g. quote-dark), load the base block folder. */
+  const blockFolderAliases = {
+    'quote-dark': 'quote',
+  };
+  const folder = blockFolderAliases[name] || name;
   block.dataset.blockName = name;
-  const blockPath = `${codeBase}/blocks/${name}/${name}`;
+  const blockPath = `${codeBase}/blocks/${folder}/${folder}`;
   const loading = [new Promise((resolve) => {
     (async () => {
       try {
