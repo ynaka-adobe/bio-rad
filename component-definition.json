@@ -415,6 +415,36 @@
           }
         },
         {
+          "title": "Quote",
+          "id": "quote",
+          "model": "quote",
+          "plugins": {
+            "da": {
+              "name": "quote",
+              "unsafeHTML": "<div><div></div></div><div><div></div></div>",
+              "fields": [
+                {
+                  "name": "quotation",
+                  "selector": "div:first-child>div"
+                },
+                {
+                  "name": "attribution",
+                  "selector": "div:last-child>div"
+                }
+              ]
+            },
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Quote",
+                  "model": "quote"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Schedule",
           "id": "schedule",
           "model": "schedule",

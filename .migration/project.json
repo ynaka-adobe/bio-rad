@@ -1,5 +1,7 @@
 {
   "type": "da",
   "libraryUrl": "https://main--bio-rad--ynaka-adobe.aem.page/tools/sidekick/library.json",
-  "contentHostUrl": "https://content.da.live/ynaka-adobe/bio-rad/"
+  "contentHostUrl": "https://content.da.live/ynaka-adobe/bio-rad/",
+  "previewOrg": "ynaka-adobe",
+  "previewSite": "bio-rad"
 }
