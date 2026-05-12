@@ -1,8 +1,69 @@
 .target-offer {
-  /* Stable hook for VEC / Replace content / cssSelector in Target activities */
-  min-height: 0;
+  width: 100%;
 }
 
-.target-offer__slot:empty {
-  min-height: 0;
+.target-offer-content {
+  width: 100%;
+}
+
+.target-offer--fallback {
+  opacity: 1;
+}
+
+.target-offer--error {
+  outline: 1px dashed #d66;
+  outline-offset: 4px;
+}
+
+.target-offer-card {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.target-offer-card-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.target-offer-card-body {
+  padding: 1rem;
+}
+
+.target-offer-card-eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666;
+}
+
+.target-offer-card-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.target-offer-card-description {
+  margin: 0 0 1rem;
+  color: #444;
+}
+
+.target-offer-card-cta {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: #1473e6;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.target-offer-card-cta:hover,
+.target-offer-card-cta:focus {
+  background: #0d66d0;
 }

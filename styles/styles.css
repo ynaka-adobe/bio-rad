@@ -119,6 +119,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Page metadata table: mirrored in <head> by the pipeline; hide from layout even if blocks/metadata.js is missing on a branch */
+main .metadata {
+  display: none;
+}
+
 /* ===== TYPOGRAPHY ===== */
 
 h1,
