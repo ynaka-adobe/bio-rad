@@ -78,12 +78,17 @@ async function ensureTargetAtJs() {
   }
 }
 
+/** True when meta {@code target-mbox-hero} is set (exclusive with manual page-load applyOffers). */
+function isTargetMboxHeroConfigured() {
+  return Boolean(getMetadata('target-mbox-hero')?.trim());
+}
+
 /**
  * Legacy mbox flow (getOffer + applyOffer), per Adobe at.js docs.
  * Runs after blocks render so the selector exists.
- * Opt-in: set meta target-mbox-hero to the mbox name (e.g. eds-hero-mbox).
- * Optional: meta target-mbox-hero-selector (default .hero.block .hero-inner).
- * Homepage uses hero-banner — use e.g. .hero-banner for that template.
+ * Opt-in: meta {@code target-mbox-hero} (e.g. eds-hero-mbox); optional {@code target-mbox-hero-selector}
+ * (default {@code .hero.block .hero-inner}). When this meta is set, {@code loadPage} skips
+ * {@code applyTargetPageLoad} so the two paths do not overwrite the same DOM.
  * @see https://experienceleague.adobe.com/en/docs/target-dev/developer/client-side/at-js-implementation/functions-overview/adobe-target-applyoffer
  */
 async function applyTargetHeroMboxIfConfigured() {
@@ -119,11 +124,17 @@ export async function loadPage() {
   await ensureTargetAtJs();
   await runExperimentation(document, experimentationConfig);
   await loadArea();
-  await applyTargetPageLoad();
-  /** Second pass for at.js / VEC timing (opt-in: meta name target-reapply-page-load content 1). */
-  if (getMetadata('target-reapply-page-load')) {
-    await new Promise((r) => requestAnimationFrame(r));
+  /**
+   * Page-load getOffers/applyOffers fights the hero mbox path if both run (flicker / overwritten DOM).
+   * When meta {@code target-mbox-hero} is set, only the mbox path runs; otherwise only page load.
+   */
+  if (!isTargetMboxHeroConfigured()) {
     await applyTargetPageLoad();
+    /** Second pass for at.js / VEC timing (opt-in: meta name target-reapply-page-load content 1). */
+    if (getMetadata('target-reapply-page-load')) {
+      await new Promise((r) => requestAnimationFrame(r));
+      await applyTargetPageLoad();
+    }
   }
   await applyTargetHeroMboxIfConfigured();
 }
