@@ -5,16 +5,25 @@
   overflow: hidden;
 }
 
+/* Give the image column a real box size: percent heights + grid stretch often collapse to 0 on desktop. */
 .newsletter .newsletter-image {
-  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  align-self: stretch;
 }
 
 .newsletter .newsletter-image > div {
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
   height: 100%;
 }
 
 .newsletter .newsletter-image picture {
   display: block;
+  flex: 1 1 auto;
+  min-height: 200px;
   height: 100%;
 }
 
@@ -22,6 +31,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  min-height: 200px;
   object-fit: cover;
 }
 
@@ -111,8 +121,15 @@
     grid-template-columns: 1fr 1.5fr;
   }
 
+  /* Do not remove min-height (was min-height: unset): wide viewports relied on a broken height:100% chain
+     and the image column could render with no visible bitmap. */
   .newsletter .newsletter-image {
-    min-height: unset;
+    min-height: min(50vh, 420px);
+  }
+
+  .newsletter .newsletter-image picture,
+  .newsletter .newsletter-image img {
+    min-height: min(50vh, 420px);
   }
 
   .newsletter .newsletter-content {
