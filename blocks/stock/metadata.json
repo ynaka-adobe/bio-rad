@@ -1,0 +1,40 @@
+{
+  "variantName": "stock",
+  "baseBlock": "stock",
+  "version": "1.0.0",
+  "created": "2026-05-14T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.bio-rad.com",
+    "originPage": "Stock data block",
+    "blockPosition": "flexible"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "stock-display",
+    "dataPattern": "financial"
+  },
+  "contentPattern": {
+    "structure": "symbol + price + market data",
+    "dataSource": "Finnhub API",
+    "defaultSymbol": "BIO"
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "displaying real-time stock prices",
+      "company stock information sections",
+      "financial overview pages"
+    ],
+    "notSuitableFor": [
+      "multiple stock comparisons",
+      "historical data visualization",
+      "portfolio dashboards"
+    ]
+  },
+  "apiConfiguration": {
+    "provider": "Finnhub",
+    "endpoint": "https://finnhub.io/api/v1/quote",
+    "cacheDuration": "1 hour",
+    "rateLimitOptimization": "single-call-per-session"
+  }
+}
