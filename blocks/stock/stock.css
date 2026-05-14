@@ -1,0 +1,72 @@
+/* Stock Block - Finnhub API Integration */
+.section:has(.stock) {
+  background-color: #fff;
+  padding: 64px 24px;
+}
+
+.stock-container {
+  padding: 0;
+}
+
+.stock-container .stock-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stock {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stock-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+.stock-symbol {
+  font-size: var(--heading-font-size-xl);
+  font-weight: 300;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.stock-price {
+  font-size: 48px;
+  font-weight: 200;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.stock-data {
+  font-size: var(--body-font-size-l);
+  font-weight: 200;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.stock-data p {
+  margin: 8px 0;
+}
+
+.stock-loading {
+  text-align: center;
+  padding: 32px;
+  color: var(--color-text-primary);
+}
+
+.stock-error {
+  text-align: center;
+  padding: 32px;
+  color: #d32f2f;
+}
+
+@media (width >= 900px) {
+  .stock-content {
+    flex-direction: row;
+    gap: 48px;
+  }
+}
