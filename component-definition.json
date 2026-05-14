@@ -415,6 +415,33 @@
           }
         },
         {
+          "title": "Newsletter",
+          "id": "newsletter",
+          "model": "newsletter",
+          "plugins": {
+            "da": {
+              "name": "newsletter",
+              "rows": 1,
+              "columns": 2,
+              "behaviour": "columns",
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div:first-child>div>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div:first-child>div>picture>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:last-child>div"
+                }
+              ]
+            }
+          }
+        },
+        {
           "title": "Quote",
           "id": "quote",
           "model": "quote",
