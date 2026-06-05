@@ -517,6 +517,18 @@
     ]
   },
   {
+    "id": "stock",
+    "fields": [
+      {
+        "component": "text",
+        "name": "query",
+        "label": "Symbol or company name",
+        "value": "Bio-Rad",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "table",
     "fields": [
       {
