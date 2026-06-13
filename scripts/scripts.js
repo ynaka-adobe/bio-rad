@@ -1,10 +1,11 @@
-import { getConfig, getMetadata, loadArea, setConfig } from './ak.js';
+import { getMetadata, loadArea, setConfig } from './ak.js';
 import { runExperimentation } from './experiment-loader.js';
-
-/** AEM Universal Editor iframe loads this origin; skip Target so at.js does not fight UE/CSP. */
-const isUePreviewHost = (hostname = window.location.hostname) => (
-  /\.(?:stage-ue|ue)\.da\.live$/.test(hostname)
-);
+import {
+  applyTargetHeroMboxIfConfigured,
+  applyTargetPageLoad,
+  ensureTargetAtJs,
+  isUePreviewHost,
+} from './target.js';
 
 /** Suffixes for internal link decoration (see decorateLink in ak.js). */
 const hostnames = ['aem.page', 'aem.live', 'ynaka-adobe.aem.page', 'ynaka-adobe.aem.live'];
@@ -51,101 +52,6 @@ const decorateArea = ({ area = document }) => {
 
   eagerLoad(area, 'img');
 };
-
-/**
- * Load at.js early so other code can rely on window.adobe.target, but do not apply
- * page-load offers until after blocks run — e.g. target-offer creates `.target-offer__slot`
- * in its init; VEC selectors often point at that hook.
- */
-async function ensureTargetAtJs() {
-  if (isUePreviewHost()) return;
-  const targetMeta = getMetadata('target');
-  if (!targetMeta) return;
-
-  /** Optional override; if unset, at.js uses the edge host from your built vendor-at.js. */
-  const serverDomain = getMetadata('target-server-domain')?.trim();
-  window.targetGlobalSettings = {
-    secureOnly: true,
-    overrideMboxEdgeServer: false,
-    ...(serverDomain ? { serverDomain } : {}),
-  };
-
-  try {
-    await import('../deps/at/at.js');
-  } catch (e) {
-    getConfig().log(e, document.body);
-  }
-}
-
-async function applyTargetPageLoad() {
-  if (isUePreviewHost()) return;
-  const targetMeta = getMetadata('target');
-  if (!targetMeta) return;
-
-  const t = window.adobe?.target;
-  if (!t?.getOffers) return;
-
-  try {
-    const pageLoadRequest = { execute: { pageLoad: {} } };
-    const offers = await t.getOffers({
-      request: pageLoadRequest,
-    });
-
-    if (typeof t.applyOffers === 'function') {
-      await t.applyOffers({
-        request: pageLoadRequest,
-        response: offers,
-      });
-    } else {
-      offers?.execute?.pageLoad?.options?.forEach((opt) => {
-        const payload = opt?.content?.[0];
-        if (!payload) return;
-        const { cssSelector, content } = payload;
-        if (!cssSelector || content == null) return;
-        const el = document.querySelector(cssSelector);
-        if (el) el.outerHTML = content;
-      });
-    }
-  } catch (e) {
-    getConfig().log(e, document.body);
-  }
-}
-
-/**
- * Legacy mbox flow (getOffer + applyOffer), per Adobe at.js docs.
- * Runs after blocks render so the selector exists.
- * Opt-in: set meta target-mbox-hero to the mbox name (e.g. eds-hero-mbox).
- * Optional: meta target-mbox-hero-selector (default .hero.block .hero-inner).
- * Homepage uses hero-banner — use e.g. .hero-banner for that template.
- * @see https://experienceleague.adobe.com/en/docs/target-dev/developer/client-side/at-js-implementation/functions-overview/adobe-target-applyoffer
- */
-async function applyTargetHeroMboxIfConfigured() {
-  if (isUePreviewHost()) return;
-  const mbox = getMetadata('target-mbox-hero')?.trim();
-  if (!mbox) return;
-
-  const selector = getMetadata('target-mbox-hero-selector')?.trim()
-    || '.hero.block .hero-inner';
-  const t = window.adobe?.target;
-  if (!t?.getOffer || !t?.applyOffer) return;
-
-  await new Promise((resolve) => {
-    t.getOffer({
-      mbox,
-      success(offers) {
-        const el = document.querySelector(selector);
-        if (!el) {
-          getConfig().log(new Error(`Target mbox "${mbox}": no element for selector "${selector}"`), document.body);
-          resolve();
-          return;
-        }
-        t.applyOffer({ mbox, selector, offer: offers });
-        resolve();
-      },
-      error: resolve,
-    });
-  });
-}
 
 export async function loadPage() {
   setConfig({ hostnames, locales, linkBlocks, components, decorateArea });
