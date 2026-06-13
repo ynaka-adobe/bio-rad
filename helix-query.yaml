@@ -26,6 +26,73 @@ indices:
         select: none
         value: |
           parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+  products:
+    include:
+      - /products/**
+    exclude:
+      - /drafts/**
+    target: /products/query-index.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, "content")
+      productName:
+        select: head > meta[name="product-name"]
+        value: |
+          attribute(el, "content")
+      sku:
+        select: head > meta[name="sku"]
+        value: |
+          attribute(el, "content")
+      productType:
+        select: head > meta[name="product-type"]
+        value: |
+          attribute(el, "content")
+      status:
+        select: head > meta[name="status"]
+        value: |
+          attribute(el, "content")
+      compatibleWith:
+        select: head > meta[name="compatible-with"]
+        values: |
+          attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, "content")
+      productUrl:
+        select: head > meta[name="product-url"]
+        value: |
+          attribute(el, "content")
+      parentProduct:
+        select: head > meta[name="parent-product"]
+        value: |
+          attribute(el, "content")
+      parentProductId:
+        select: head > meta[name="parent-product-id"]
+        value: |
+          attribute(el, "content")
+      technology:
+        select: head > meta[name="technology"]
+        values: |
+          attribute(el, "content")
+      productDivision:
+        select: head > meta[name="product-division"]
+        value: |
+          attribute(el, "content")
+      countryExclusion:
+        select: head > meta[name="country-exclusion"]
+        values: |
+          attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, "content"), "https:\/\/[^/]+(/.*)")
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
   blog:
     include:
       - /blog/**
