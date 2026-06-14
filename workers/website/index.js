@@ -17,6 +17,29 @@ import fetchTarget from './handlers/target.js';
 /** Client → worker path prefix; forwards to Target at `env.TARGET_HOSTNAME` (see handlers/target.js). */
 const TARGET_PROXY_PREFIX = '/adobe/target';
 
+const LOCALE_PREFIXES = ['/en', '/de', '/es', '/fr', '/hi', '/ja', '/zh'];
+
+function getLocalePrefix(pathname) {
+  return LOCALE_PREFIXES.find(
+    (p) => pathname === p || pathname.startsWith(`${p}/`),
+  ) || null;
+}
+
+async function isCountryExcluded(response, countryCode) {
+  let excluded = false;
+  await new HTMLRewriter()
+    .on('meta[name="exclude-from-country"]', {
+      element(el) {
+        const content = (el.getAttribute('content') || '').toLowerCase();
+        const codes = content.split(',').map((c) => c.trim());
+        if (codes.includes(countryCode)) excluded = true;
+      },
+    })
+    .transform(response.clone())
+    .text();
+  return excluded;
+}
+
 const ROUTES = [
   // Handle schedule manifests
   {
@@ -136,6 +159,19 @@ export default {
 
     const { handler, cache } = ROUTES.find((route) => route.match(url.pathname));
 
-    return handler({ url, env, request, cache, savedSearch });
+    const response = await handler({ url, env, request, cache, savedSearch });
+
+    const localePrefix = getLocalePrefix(url.pathname);
+    const ext = getExtension(url.pathname);
+    const isHtml = ext === '' || ext === 'html';
+    const is404Path = url.pathname.endsWith('/404');
+    if (localePrefix && isHtml && !is404Path && response.status === 200) {
+      const countryCode = localePrefix.slice(1);
+      if (await isCountryExcluded(response, countryCode)) {
+        return Response.redirect(`${url.origin}${localePrefix}/404`, 302);
+      }
+    }
+
+    return response;
   },
 };
