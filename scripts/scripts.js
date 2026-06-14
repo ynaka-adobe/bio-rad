@@ -1,4 +1,4 @@
-import { getMetadata, loadArea, setConfig } from './ak.js';
+import { getConfig, getMetadata, loadArea, setConfig } from './ak.js';
 import { runExperimentation } from './experiment-loader.js';
 import {
   applyTargetHeroMboxIfConfigured,
@@ -53,8 +53,21 @@ const decorateArea = ({ area = document }) => {
   eagerLoad(area, 'img');
 };
 
+function enforceCountryExclusion() {
+  const metaValue = getMetadata('exclude-from-country');
+  if (!metaValue) return;
+  const { locale } = getConfig();
+  const countryCode = locale.prefix.replace('/', '').toUpperCase();
+  if (!countryCode) return;
+  const excluded = metaValue.split(',').map((c) => c.trim().toUpperCase());
+  if (excluded.includes(countryCode)) {
+    window.location.replace(`${locale.prefix}/404`);
+  }
+}
+
 export async function loadPage() {
   setConfig({ hostnames, locales, linkBlocks, components, decorateArea });
+  enforceCountryExclusion();
   await ensureTargetAtJs();
   await runExperimentation(document, experimentationConfig);
   await loadArea();
